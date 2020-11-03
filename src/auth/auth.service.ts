@@ -1,22 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCompanySignUpDto } from './dto/auth-company-signup.dto';
-import { AuthPersonSignUpDto } from './dto/auth-person-signup.dto';
 import { UserRepository } from './user.repository';
+import { AuthSignUpDto } from './dto/auth-signup.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { JwtPayload } from './jwt/jwt-payload.interface';
+import { JwtService } from '@nestjs/jwt/dist/jwt.service';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
+    private jwtService: JwtService,
+  ) {}
 
-    constructor(
-        @InjectRepository(UserRepository)
-        private userRepository: UserRepository
-    ) {}
+  async signUp(authSignUpDto: AuthSignUpDto): Promise<void> {
+    return this.userRepository.signUp(authSignUpDto);
+  }
 
-    async personSignUp(authPersonSignUpDto: AuthPersonSignUpDto): Promise<void> {
-        return this.userRepository.personSignUp(authPersonSignUpDto);
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.userRepository.signIn(authCredentialsDto);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    async companySignUp(authCompanySignUpDto: AuthCompanySignUpDto): Promise<void> {
-        return this.userRepository.companySignUp(authCompanySignUpDto);
-    }
+    return this.generateUserResponse(user);
+  }
+
+  private async generateUserResponse(user: User): Promise<UserResponseDto> {
+    const payload: JwtPayload = { id: user.id };
+    const accessToken = await this.jwtService.signAsync(payload);
+    const userResponse = UserResponseDto.fromUser(user, accessToken);
+
+    return userResponse;
+  }
 }

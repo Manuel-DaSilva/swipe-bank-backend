@@ -1,39 +1,39 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserType } from './user-type.enum';
+import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class User extends BaseEntity {
-    
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    username: string;
+  @Column({ unique: true })
+  username: string;
 
-    @Column()
-    password: string;
+  @Column()
+  type: UserType;
 
-    @Column()
-    salt: string;
+  @Column()
+  fullName: string;
 
-    @Column('boolean')
-    isCompany: boolean;
+  @Column({ unique: true })
+  dni: string;
 
-    @Column({nullable: true})
-    companyName: string;
+  @Column()
+  address: string;
 
-    @Column({nullable: true})
-    firstName: string;
+  @Column()
+  salt: string;
 
-    @Column({nullable: true})
-    lastName: string;
+  @Column()
+  password: string;
 
-    @Column('boolean', {default: false})
-    isAdmin: boolean;
+  async validatePassword(password: string): Promise<boolean> {
+    const hash = await bcrypt.hash(password, this.salt);
 
-    @Column({nullable: true, default: null})
-    apikey: string;
+    return hash === this.password;
+  }
 }

@@ -2,14 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
-import { PaymentModule } from './payment/payment.module';
+import { ShopsModule } from './shops/shops.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(typeOrmConfig),
-    AuthModule,
-    PaymentModule
-  ],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), AuthModule, ShopsModule],
   controllers: [],
   providers: [],
 })

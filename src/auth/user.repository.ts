@@ -1,41 +1,54 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { AuthCompanySignUpDto } from './dto/auth-company-signup.dto';
-import { AuthPersonSignUpDto } from './dto/auth-person-signup.dto';
+import { AuthSignUpDto } from './dto/auth-signup.dto';
 import { User } from './user.entity';
+import * as bcrypt from 'bcryptjs';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async companySignUp(
-    authCompanySignUpDto: AuthCompanySignUpDto,
-  ): Promise<void> {
+  async signUp(authSignUpDto: AuthSignUpDto): Promise<void> {
     const user = new User();
 
-    this.buildBaseUSer(user, authCompanySignUpDto);
-    user.companyName = authCompanySignUpDto.companyName ?? null;
-    user.isCompany = true;
+    user.email = authSignUpDto.email;
+    user.username = authSignUpDto.username;
+    user.type = authSignUpDto.type;
+    user.fullName = authSignUpDto.fullName;
+    user.dni = authSignUpDto.dni;
+    user.address = authSignUpDto.address;
+    user.salt = await bcrypt.genSalt();
+    user.password = await this.hashPassword(authSignUpDto.password, user.salt);
 
-    await user.save();
+    try {
+      await user.save();
+    } catch (e) {
+      if (e.code === '23505') {
+        throw new ConflictException(e, 'Duplicated values');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
-  async personSignUp(authPersonSignUpDto: AuthPersonSignUpDto): Promise<void> {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.findOne({ username });
 
-    const user = new User();
-    this.buildBaseUSer(user, authPersonSignUpDto);
-    user.firstName = authPersonSignUpDto.firstName ?? null;
-    user.lastName = authPersonSignUpDto.lastName ?? null;
-    user.isAdmin = authPersonSignUpDto.isAdmin;
-    user.isCompany = false;
-    await user.save();
+    if (user && (await user.validatePassword(password))) {
+      // if user is valid, delete password and salt to return user
+      delete user.password;
+      delete user.salt;
+
+      return user;
+    } else {
+      return null;
+    }
   }
 
-  private buildBaseUSer(
-    user: User,
-    authDto: AuthCompanySignUpDto | AuthPersonSignUpDto,
-  ): void {
-
-    user.email = authDto.email;
-    user.username = authDto.username;
-    user.password = authDto.username;
-    user.salt = '';
+  private async hashPassword(password: string, salt: string): Promise<string> {
+    return bcrypt.hash(password, salt);
   }
 }
