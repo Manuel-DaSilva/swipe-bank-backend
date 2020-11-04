@@ -1,39 +1,36 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { bankDto } from './bank.dto';
+import { Bank } from './bank.entity';
+import { BankService } from './bank.service';
 
 @Controller('bank')
 export class BankController {
 
-    banks: bankDto[] = [ {id: "1", code: "0102", name:"Venezuela", apiEndpoint: "http"}];
+    constructor(private bankService: BankService) {}
 
     @Get()
-    getAllBanks(): bankDto[] {
-        return this.banks;
+    getAllBanks(): Promise<Bank[]> {
+        return this.bankService.getBanks();
     }
 
     @Get(':id')
-    getBankById(@Param('id') id: string): bankDto {
-        const Bank = this.banks.find(Bank => Bank.id == id);
-        return Bank;
+    getBankById(@Param('id') id: number): Promise<Bank> {        
+        return this.bankService.getBank(id);
     }
 
     @Post()
-    newBank(@Body() Bank: bankDto): bankDto {
-        const newBank = {...Bank, id: ''+(this.banks.length)}
-        this.banks = [...this.banks, newBank];
-        return newBank;
+    createBank(@Body() bank: Bank): Promise<Bank> {
+        return this.bankService.createBank(bank);
     }
 
     @Put(':id')
-    updateBank(@Param('id') id: string, @Body() Bank: bankDto): bankDto {
-        this.banks = this.banks.filter(Bank => Bank.id !== id);
-        this.banks = [...this.banks, this.newBank(Bank)];
-        return Bank;
+    updateBank(@Param('id') id: number, @Body() bank: Bank): Promise<Bank> {  
+        return this.bankService.updateBank(id, bank);
     }
 
     @Delete(':id')
-    deleteBank(@Param('id') id: string) {
-        this.banks = this.banks.filter(Bank => Bank.id !== id);
+    deleteBank(@Param('id') id: number) {
+        return this.bankService.deleteBank(id);
     }
 
 

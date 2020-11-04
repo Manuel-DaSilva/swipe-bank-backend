@@ -2,7 +2,7 @@ import { IsString, MinLength, MaxLength } from "class-validator";
 
 export class bankDto {
 
-    readonly id?: string;
+    readonly id?: number;
     readonly apiKey?: string;
 
     @IsString()
