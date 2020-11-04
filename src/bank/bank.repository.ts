@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from "typeorm";
+import { DeleteResult, EntityRepository, Repository, UpdateResult } from "typeorm";
 import { Bank } from "./bank.entity";
 import { v4 as uuidv4 } from 'uuid';
 import { InternalServerErrorException } from "@nestjs/common";
@@ -33,23 +33,23 @@ export class BankRepository extends Repository<Bank> {
 
     async getBank(id:number):Promise<Bank> {
         try {
-            return await this.getBank(id);
+            return await this.findOne(id);
         } catch (e) {
             throw new InternalServerErrorException();
         }
     }
 
-    async updateBank(id:number, bank:Bank):Promise<Bank> {
+    async updateBank(id:number, bank:Bank):Promise<UpdateResult> {
         try {
-            return await this.updateBank(id, bank);
+            return await this.update(id, bank);
         } catch (e) {
             throw new InternalServerErrorException();
         }        
     }
 
-    async deleteBank(id:number):Promise<Bank> {
+    async deleteBank(id:number):Promise<DeleteResult> {
         try {
-            return await this.deleteBank(id);
+            return await this.delete(id);
         } catch (e) {
             throw new InternalServerErrorException();
         }

@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { bankDto } from './bank.dto';
 import { Bank } from './bank.entity';
 import { BankService } from './bank.service';
@@ -24,12 +25,12 @@ export class BankController {
     }
 
     @Put(':id')
-    updateBank(@Param('id') id: number, @Body() bank: Bank): Promise<Bank> {  
+    updateBank(@Param('id') id: number, @Body() bank: Bank): Promise<UpdateResult> {  
         return this.bankService.updateBank(id, bank);
     }
 
     @Delete(':id')
-    deleteBank(@Param('id') id: number) {
+    deleteBank(@Param('id') id: number): Promise<DeleteResult> {
         return this.bankService.deleteBank(id);
     }
 

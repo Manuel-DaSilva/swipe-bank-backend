@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Bank } from './bank.entity';
 import { BankRepository } from './bank.repository';
 
@@ -22,11 +23,11 @@ export class BankService {
         return this.bankRepository.getBank(id);
     }
 
-    async updateBank(id:number, bank : Bank): Promise<Bank> {
+    async updateBank(id:number, bank : Bank): Promise<UpdateResult> {
         return this.bankRepository.updateBank(id, bank);
     }
 
-    async deleteBank(id:number): Promise<Bank> {
+    async deleteBank(id:number): Promise<DeleteResult> {
         return this.bankRepository.deleteBank(id);
     }
 }
