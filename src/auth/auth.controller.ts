@@ -1,24 +1,25 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+
 import { AuthService } from './auth.service';
-import { AuthCompanySignUpDto } from './dto/auth-company-signup.dto';
-import { AuthPersonSignUpDto } from './dto/auth-person-signup.dto';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { AuthSignUpDto } from './dto/auth-signup.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
 
-    constructor(
-        private authService: AuthService,
-    ) {}
+  @Post('/signup')
+  personSignUp(
+    @Body(ValidationPipe) authSignUpDto: AuthSignUpDto,
+  ): Promise<void> {
+    return this.authService.signUp(authSignUpDto);
+  }
 
-    @Post('/signup/person')
-    personSignUp(@Body(ValidationPipe) authPersonSignUpDto: AuthPersonSignUpDto): Promise<void> {
-
-        return this.authService.personSignUp(authPersonSignUpDto);
-    }
-
-    @Post('/signup/company')
-    companySignUp(@Body(ValidationPipe) authCompanySignUpDto: AuthCompanySignUpDto): Promise<void> {
-
-        return this.authService.companySignUp(authCompanySignUpDto);
-    }
+  @Post('/signin')
+  signIn(
+    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+  ): Promise<UserResponseDto> {
+    return this.authService.signIn(authCredentialsDto);
+  }
 }
