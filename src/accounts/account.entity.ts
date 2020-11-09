@@ -24,13 +24,13 @@ export class Account extends BaseEntity {
   @Column()
   status: AccountStatus;
 
-  @Column()
-  userId: number;
-
   @ManyToOne(
-    type => User,
+    () => User,
     user => user.accounts,
     { eager: false },
   )
   user: User;
+
+  @Column()
+  userId: number;
 }
