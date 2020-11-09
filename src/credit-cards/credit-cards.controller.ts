@@ -12,8 +12,6 @@ export class CreditCardsController {
 
   @Post()
   createCreditCard(@GetUser() user: User): Promise<CreditCard> {
-    console.log('controller', user);
-
     return this.creditCardsService.createCard(user);
   }
 }

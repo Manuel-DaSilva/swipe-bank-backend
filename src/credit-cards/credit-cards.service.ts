@@ -12,7 +12,6 @@ export class CreditCardsService {
   ) {}
 
   createCard(user: User): Promise<CreditCard> {
-    console.log('service', user);
     return this.creditCardReposity.createCreditCard(user);
   }
 }
