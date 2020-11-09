@@ -20,7 +20,9 @@ export class ShopRepository extends Repository<Shop> {
     shop.account = account;
     try {
       await shop.save();
-      return this.findOne(shop.id);
+      delete shop.user;
+      delete shop.account;
+      return shop;
     } catch (e) {
       console.log(e);
 

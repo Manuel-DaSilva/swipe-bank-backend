@@ -9,6 +9,7 @@ import { UserType } from './user-type.enum';
 import * as bcrypt from 'bcryptjs';
 import { Account } from '../accounts/account.entity';
 import { Shop } from 'src/shops/shop.entity';
+import { CreditCard } from '../credit-cards/credit-card.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -53,6 +54,13 @@ export class User extends BaseEntity {
     { eager: true },
   )
   shops: Shop[];
+
+  @OneToMany(
+    () => CreditCard,
+    creditCard => creditCard.user,
+    { eager: true },
+  )
+  creditCards: CreditCard[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
