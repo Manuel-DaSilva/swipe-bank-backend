@@ -7,6 +7,7 @@ import { ShopsModule } from './shops/shops.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { CreditCardsModule } from './credit-cards/credit-cards.module';
 import { PaymentsModule } from './payments/payments.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PaymentsModule } from './payments/payments.module';
     AccountsModule,
     CreditCardsModule,
     PaymentsModule,
+    TransactionsModule,
   ],
   controllers: [],
   providers: [],

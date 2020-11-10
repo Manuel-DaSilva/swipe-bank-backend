@@ -4,10 +4,11 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CreditCardStatus } from './credit-card-status.enum';
-
+import { Transaction } from '../transactions/transaction.entity';
 @Entity()
 export class CreditCard extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -43,4 +44,10 @@ export class CreditCard extends BaseEntity {
 
   @Column()
   userId: number;
+
+  @OneToMany(
+    () => Transaction,
+    transaction => transaction.creditCard,
+  )
+  transactions: Transaction[];
 }
