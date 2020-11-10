@@ -35,4 +35,14 @@ export class CreditCardReposity extends Repository<CreditCard> {
       throw new InternalServerErrorException();
     }
   }
+
+  async getAllCreditCards(user: User): Promise<CreditCard[]>{
+    const creditCards = await CreditCard.find({
+      where: {
+        userId: user.id
+      }
+    });
+
+    return creditCards;
+  }
 }
