@@ -1,6 +1,7 @@
 import {
   IsAlpha,
   IsNumberString,
+  IsPositive,
   IsString,
   MaxLength,
   MinLength,
@@ -21,9 +22,12 @@ export class CreditCardPaymentDto {
   creditCardSecurityCode: string;
 
   @IsString()
-  @IsAlpha()
   creditCardName: string;
 
+  @IsPositive()
+  amount: number;
+
   @IsString()
-  shopApiKey: string;
+  @IsAlpha()
+  description: string;
 }

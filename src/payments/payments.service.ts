@@ -13,13 +13,16 @@ export class PaymentsService {
     private shopsService: ShopsService,
   ) {}
 
-  async creditCardPayment(creditCardPaymentDto: CreditCardPaymentDto) {
-    const shop = await this.shopsService.getShopByApiKey(
-      creditCardPaymentDto.shopApiKey,
-    );
+  async creditCardPayment(
+    creditCardPaymentDto: CreditCardPaymentDto,
+    apikey: string,
+  ) {
+    const shop = await this.shopsService.getShopByApiKey(apikey);
 
     if (!shop) {
-      throw new BadRequestException(`We couldn't find a shop with this apiKey`);
+      throw new BadRequestException(
+        `We couldn't find a shop with this apikey ${apikey}`,
+      );
     }
 
     if (this.isForOtherBank(creditCardPaymentDto.creditCardNumber)) {
@@ -27,7 +30,10 @@ export class PaymentsService {
         creditCardPaymentDto,
       );
     } else {
-      return this.creditCardPaymentService.handlePayment(creditCardPaymentDto);
+      return this.creditCardPaymentService.handlePayment(
+        creditCardPaymentDto,
+        shop,
+      );
     }
   }
 

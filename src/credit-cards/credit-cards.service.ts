@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
+import { CreditCardPaymentDto } from 'src/payments/dto/credit-card-payment.dto';
+import { CreditCardStatus } from './credit-card-status.enum';
 import { CreditCard } from './credit-card.entity';
 import { CreditCardReposity } from './credit-card.repository';
 
@@ -13,5 +15,15 @@ export class CreditCardsService {
 
   createCard(user: User): Promise<CreditCard> {
     return this.creditCardReposity.createCreditCard(user);
+  }
+
+  getCreditCardForPayment(creditCardPaymentDto: CreditCardPaymentDto) {
+    return this.creditCardReposity.findOne({
+      number: creditCardPaymentDto.creditCardNumber.toUpperCase(),
+      // expirationDate: creditCardPaymentDto
+      securityCode: parseInt(creditCardPaymentDto.creditCardSecurityCode),
+      name: creditCardPaymentDto.creditCardName.toUpperCase(),
+      status: CreditCardStatus.ACTIVE,
+    });
   }
 }
