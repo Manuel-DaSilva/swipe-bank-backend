@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AccountsService } from './accounts.service';
 import { Account } from './account.entity';
@@ -13,5 +13,10 @@ export class AccountsController {
   @Post()
   createTask(@GetUser() user: User): Promise<Account> {
     return this.accountsService.createAccount(user);
+  }
+
+  @Get()
+  getBanks(@GetUser() user: User): Promise<Account[]>{
+    return this.accountsService.getAccounts(user);
   }
 }

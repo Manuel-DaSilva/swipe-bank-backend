@@ -39,6 +39,16 @@ export class CreditCardReposity extends Repository<CreditCard> {
     }
   }
 
+  async getAllCreditCards(user: User): Promise<CreditCard[]>{
+    const creditCards = await CreditCard.find({
+      where: {
+        userId: user.id
+      }
+    });
+
+    return creditCards;
+  }
+  
   private generateCardNumber(): string {
     const number = `${CREDIT_CARD_CODE}${this.generateChunk()}${this.generateChunk()}${this.generateChunk()}`;
 

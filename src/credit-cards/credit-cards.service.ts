@@ -26,4 +26,8 @@ export class CreditCardsService {
       status: CreditCardStatus.ACTIVE,
     });
   }
+
+  getAllCards(user: User): Promise<CreditCard[]> {
+    return this.creditCardReposity.getAllCreditCards(user);
+  }
 }

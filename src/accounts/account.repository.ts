@@ -23,4 +23,13 @@ export class AccountRepository extends Repository<Account> {
       throw new InternalServerErrorException();
     }
   }
+
+  async getAccounts(user: User): Promise<Account[]>{
+    const accounts = await Account.find({
+      where: {
+        userId: user.id
+      }
+    });
+    return accounts;
+  }
 }
