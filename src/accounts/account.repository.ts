@@ -27,7 +27,8 @@ export class AccountRepository extends Repository<Account> {
   async getAccounts(user: User): Promise<Account[]>{
     const accounts = await Account.find({
       where: {
-        userId: user.id
+        userId: user.id,
+        status: AccountStatus.ACTIVE
       }
     });
     return accounts;
