@@ -25,6 +25,7 @@ export class CreditCardReposity extends Repository<CreditCard> {
     );
     creditCard.expirationDate = new Date(Date.now() + 10);
     creditCard.securityCode = parseInt(this.generateChunk());
+    creditCard.name = user.fullName.toUpperCase();
     creditCard.user = user;
 
     try {

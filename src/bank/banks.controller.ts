@@ -1,14 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 import { Bank } from './bank.entity';
 import { BanksService } from './banks.service';
+import { CreateBankDto } from './dto/create-bank.dto';
 
 @Controller('banks')
 export class BanksController {
@@ -20,7 +13,9 @@ export class BanksController {
   }
 
   @Post()
-  createBank(@Body() bank: Bank): Promise<Bank> {
-    return this.banksService.createBank(bank);
+  createBank(
+    @Body(ValidationPipe) createBankDto: CreateBankDto,
+  ): Promise<Bank> {
+    return this.banksService.createBank(createBankDto);
   }
 }

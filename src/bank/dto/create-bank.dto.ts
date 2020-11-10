@@ -1,4 +1,9 @@
-import { IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsNumberString,
+} from 'class-validator';
 
 export class CreateBankDto {
   @IsString()
@@ -7,10 +12,10 @@ export class CreateBankDto {
   name: string;
 
   @IsString()
-  apiEndpoint: string;
+  apiEndPoint: string;
 
-  @IsString()
-  @MinLength(6)
-  @MaxLength(10)
+  @IsNumberString()
+  @MinLength(4)
+  @MaxLength(4)
   code: string;
 }

@@ -21,4 +21,8 @@ export class ShopsService {
     // create apikey
     return this.shopRepository.createAccount(user, account, createShopDto);
   }
+
+  async getShopByApiKey(apiKey: string): Promise<Shop> {
+    return this.shopRepository.findOne({ apiKey });
+  }
 }
