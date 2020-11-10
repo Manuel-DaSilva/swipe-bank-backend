@@ -1,21 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Bank extends BaseEntity {
-    
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({nullable: true, default: null})
-    apiEndpoint: string;
+  @Column()
+  apiEndPoint: string;
 
-    @Column({nullable: true, default: null})
-    code: string;
+  @Column()
+  code: string;
 
-    @Column({nullable: true, default: null})
-    apiKey: string;
+  @Column()
+  apiKey: string;
 }
