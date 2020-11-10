@@ -14,4 +14,8 @@ export class AccountsService {
   async createAccount(user: User): Promise<Account> {
     return this.accountRepository.createAccount(user);
   }
+
+  async getAccounts(user: User): Promise<Account[]>{
+    return this.accountRepository.getAccounts(user);
+  }
 }
