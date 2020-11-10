@@ -30,4 +30,8 @@ export class CreditCardsService {
   getAllCards(user: User): Promise<CreditCard[]> {
     return this.creditCardReposity.getAllCreditCards(user);
   }
+
+  closeCard(id: number, user: User): Promise<void>{
+    return this.creditCardReposity.closeCreditCard(id, user);
+  }
 }

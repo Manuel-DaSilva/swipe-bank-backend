@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CreditCard } from './credit-card.entity';
 import { CreditCardStatus } from './credit-card-status.enum';
 import { CREDIT_CARD_LIMIT } from 'src/config/bank.config';
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 
 @EntityRepository(CreditCard)
 export class CreditCardReposity extends Repository<CreditCard> {
@@ -48,6 +48,21 @@ export class CreditCardReposity extends Repository<CreditCard> {
     });
 
     return creditCards;
+  }
+
+  async closeCreditCard(id: number, user: User): Promise<void>{
+    const creditCard = await CreditCard.findOne({
+      where: {
+        id
+      }
+    });
+
+    if(creditCard){
+      creditCard.status = CreditCardStatus.CLOSED;
+      await creditCard.save();
+    }else{
+      throw new NotFoundException('Credit card not found.')
+    }
   }
   
   private generateCardNumber(): string {

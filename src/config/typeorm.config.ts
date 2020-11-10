@@ -10,7 +10,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     // ssl: { rejectUnauthorized: false },
     host: '0.0.0.0',
     username: 'postgres',
-    password: 'admin',
+    password: '22382655',
     database: 'swipebank',
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: true,
