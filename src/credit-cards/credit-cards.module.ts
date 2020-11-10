@@ -9,5 +9,6 @@ import { CreditCardsController } from './credit-cards.controller';
   imports: [TypeOrmModule.forFeature([CreditCardReposity]), AuthModule],
   controllers: [CreditCardsController],
   providers: [CreditCardsService],
+  exports: [CreditCardsService],
 })
 export class CreditCardsModule {}

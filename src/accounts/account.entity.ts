@@ -6,8 +6,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { AccountStatus } from './account-status.enum';
+import { Transaction } from '../transactions/transaction.entity';
 
 @Entity()
 export class Account extends BaseEntity {
@@ -33,4 +35,10 @@ export class Account extends BaseEntity {
 
   @Column()
   userId: number;
+
+  @OneToMany(
+    () => Transaction,
+    transaction => transaction.account,
+  )
+  transactions: Transaction[];
 }
