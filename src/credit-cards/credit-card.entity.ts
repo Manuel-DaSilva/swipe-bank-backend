@@ -20,6 +20,9 @@ export class CreditCard extends BaseEntity {
   number: string;
 
   @Column()
+  name: string;
+
+  @Column()
   securityCode: number;
 
   @Column({ default: 0 })
