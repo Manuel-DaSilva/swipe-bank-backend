@@ -4,7 +4,6 @@ import {
 } from './../config/bank.config';
 import { User } from 'src/auth/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { CreditCard } from './credit-card.entity';
 import { CreditCardStatus } from './credit-card-status.enum';
 import { CREDIT_CARD_LIMIT } from 'src/config/bank.config';
@@ -39,16 +38,16 @@ export class CreditCardReposity extends Repository<CreditCard> {
     }
   }
 
-  async getAllCreditCards(user: User): Promise<CreditCard[]>{
+  async getAllCreditCards(user: User): Promise<CreditCard[]> {
     const creditCards = await CreditCard.find({
       where: {
-        userId: user.id
-      }
+        userId: user.id,
+      },
     });
 
     return creditCards;
   }
-  
+
   private generateCardNumber(): string {
     const number = `${CREDIT_CARD_CODE}${this.generateChunk()}${this.generateChunk()}${this.generateChunk()}`;
 

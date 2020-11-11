@@ -15,7 +15,11 @@ export class AccountsService {
     return this.accountRepository.createAccount(user);
   }
 
-  async getAccounts(user: User): Promise<Account[]>{
+  async getAccounts(user: User): Promise<Account[]> {
     return this.accountRepository.getAccounts(user);
+  }
+
+  async getAccountById(accountId: number): Promise<Account> {
+    return this.accountRepository.findOne(accountId);
   }
 }

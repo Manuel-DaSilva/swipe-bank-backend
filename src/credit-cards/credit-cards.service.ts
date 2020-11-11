@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { timingSafeEqual } from 'crypto';
 import { User } from 'src/auth/user.entity';
 import { CreditCardPaymentDto } from 'src/payments/dto/credit-card-payment.dto';
 import { CreditCardStatus } from './credit-card-status.enum';
@@ -29,5 +30,8 @@ export class CreditCardsService {
 
   getAllCards(user: User): Promise<CreditCard[]> {
     return this.creditCardReposity.getAllCreditCards(user);
+    // return this.creditCardReposity.find({
+    //   userId: user.id
+    // });
   }
 }

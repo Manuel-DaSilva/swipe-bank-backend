@@ -1,6 +1,7 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -23,7 +24,7 @@ export class Transaction extends BaseEntity {
   @Column()
   amount: number;
 
-  @Column({ type: Date })
+  @CreateDateColumn()
   date: Date;
 
   @Column()
@@ -39,7 +40,7 @@ export class Transaction extends BaseEntity {
   )
   account: Account;
 
-  @Column()
+  @Column({ nullable: true })
   accountId: number;
 
   @ManyToOne(
@@ -49,6 +50,6 @@ export class Transaction extends BaseEntity {
   )
   creditCard: CreditCard;
 
-  @Column()
+  @Column({ nullable: true })
   creditCardId: number;
 }

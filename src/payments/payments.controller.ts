@@ -7,7 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
-import { PaymentsService } from './payments.service';
+import { PaymentsService } from './services/payments.service';
 
 @Controller('payments')
 export class PaymentsController {

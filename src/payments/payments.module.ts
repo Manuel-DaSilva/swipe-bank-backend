@@ -1,18 +1,25 @@
 import { HttpModule, Module } from '@nestjs/common';
 import { ShopsModule } from 'src/shops/shops.module';
 import { PaymentsController } from './payments.controller';
-import { PaymentsService } from './payments.service';
+import { PaymentsService } from './services/payments.service';
 import { BanksModule } from '../bank/banks.module';
-import { CreditCardPaymentService } from './credit-card-payment.service';
-import { ExternalBankPaymentService } from './external-bank-payment.service';
 import { CreditCardsModule } from '../credit-cards/credit-cards.module';
+import { AccountsModule } from '../accounts/accounts.module';
+import { CreditCardPurchaseService } from './services/credit-card-purchase.service';
+import { ExternalBankPaymentService } from './services/external-bank-payment.service';
 
 @Module({
-  imports: [ShopsModule, BanksModule, HttpModule, CreditCardsModule],
+  imports: [
+    ShopsModule,
+    BanksModule,
+    HttpModule,
+    CreditCardsModule,
+    AccountsModule,
+  ],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
-    CreditCardPaymentService,
+    CreditCardPurchaseService,
     ExternalBankPaymentService,
   ],
 })

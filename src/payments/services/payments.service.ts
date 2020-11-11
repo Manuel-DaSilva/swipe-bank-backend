@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
-import { ShopsService } from '../shops/shops.service';
+import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';
+import { ShopsService } from '../../shops/shops.service';
 import { CREDIT_CARD_CODE } from 'src/config/bank.config';
-import { CreditCardPaymentService } from './credit-card-payment.service';
+import { CreditCardPurchaseService } from './credit-card-purchase.service';
 import { ExternalBankPaymentService } from './external-bank-payment.service';
 
 @Injectable()
 export class PaymentsService {
   constructor(
-    private creditCardPaymentService: CreditCardPaymentService,
+    private creditCardPurchaseService: CreditCardPurchaseService,
     private externalBankPaymentService: ExternalBankPaymentService,
     private shopsService: ShopsService,
   ) {}
@@ -30,7 +30,7 @@ export class PaymentsService {
         creditCardPaymentDto,
       );
     } else {
-      return this.creditCardPaymentService.handlePayment(
+      return this.creditCardPurchaseService.handlePayment(
         creditCardPaymentDto,
         shop,
       );
