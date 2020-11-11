@@ -84,7 +84,8 @@ export class ExternalBankPaymentService {
           TransactionType.CREDIT_CARD_PAYMENT,
           TransactionNature.CREDIT,
           transactionRef,
-          creditCardPaymentDto,
+          creditCardPaymentDto.description,
+          creditCardPaymentDto.amount,
         );
         await queryRunner.manager.save(Transaction, transaction);
         await queryRunner.commitTransaction();
@@ -140,7 +141,8 @@ export class ExternalBankPaymentService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.DEBIT,
         transactionRef,
-        creditCardPaymentDto,
+        creditCardPaymentDto.description,
+        creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transaction);
 

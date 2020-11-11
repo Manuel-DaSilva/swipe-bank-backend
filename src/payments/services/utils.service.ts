@@ -13,7 +13,8 @@ export class UtilsService {
     type: TransactionType,
     nature: TransactionNature,
     ref: string,
-    paymentDto: CreditCardPaymentDto,
+    description: string,
+    amount: number,
   ): Transaction {
     if (creditCardId === null && accountId === null) {
       throw new InternalServerErrorException();
@@ -22,11 +23,11 @@ export class UtilsService {
     const transaction = new Transaction();
     transaction.accountId = accountId ?? null;
     transaction.creditCardId = creditCardId ?? null;
-    transaction.amount = paymentDto.amount;
+    transaction.amount = amount;
     transaction.type = type;
     transaction.nature = nature;
     transaction.ref = ref;
-    transaction.mesage = paymentDto.description;
+    transaction.mesage = description;
     return transaction;
   }
 

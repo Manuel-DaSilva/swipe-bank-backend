@@ -24,5 +24,6 @@ import { UtilsService } from './services/utils.service';
     ExternalBankPaymentService,
     UtilsService,
   ],
+  exports: [UtilsService],
 })
 export class PaymentsModule {}

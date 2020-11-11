@@ -70,7 +70,8 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.CREDIT,
         transactionRef,
-        creditCardPaymentDto,
+        creditCardPaymentDto.description,
+        creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionA);
 
@@ -86,7 +87,8 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.DEBIT,
         transactionRef,
-        creditCardPaymentDto,
+        creditCardPaymentDto.description,
+        creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionB);
 

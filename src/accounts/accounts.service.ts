@@ -23,6 +23,10 @@ export class AccountsService {
     return this.accountRepository.findOne(accountId);
   }
 
+  async getAccountByNumber(accountNumber: string): Promise<Account> {
+    return this.accountRepository.findOne({ number: accountNumber });
+  }
+
   async closeAccount(id: number, user: User): Promise<void> {
     return this.accountRepository.closeAccount(id, user);
   }
