@@ -3,7 +3,8 @@ import { Account } from './account.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { AccountStatus } from './account-status.enum';
 import { User } from 'src/auth/user.entity';
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { userInfo } from 'os';
 
 @EntityRepository(Account)
 export class AccountRepository extends Repository<Account> {
@@ -32,5 +33,21 @@ export class AccountRepository extends Repository<Account> {
       }
     });
     return accounts;
+  }
+
+  async closeAccount(id: number, user: User): Promise<void>{
+    let account = await Account.findOne({
+      where: {
+        id,
+        userId: user.id
+      }
+    });
+    console.log(account);
+    if(account){
+      account.status = AccountStatus.CLOSED;
+      await account.save();
+    }else{
+      throw new NotFoundException('Account not found.');
+    }
   }
 }

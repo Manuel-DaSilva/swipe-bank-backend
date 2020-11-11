@@ -21,7 +21,7 @@ export class CreditCardsController {
   }
 
   @Delete(':id')
-  closedCreditCard(@Param('id') id: number, @GetUser() user: User): Promise<void>{
+  closeCreditCard(@Param('id') id: number, @GetUser() user: User): Promise<void>{
     return this.creditCardsService.closeCard(id, user);
   }
 }

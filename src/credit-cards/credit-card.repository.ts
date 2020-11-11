@@ -51,9 +51,10 @@ export class CreditCardReposity extends Repository<CreditCard> {
   }
 
   async closeCreditCard(id: number, user: User): Promise<void>{
-    const creditCard = await CreditCard.findOne({
+    let creditCard = await CreditCard.findOne({
       where: {
-        id
+        id,
+        userId: user.id
       }
     });
 
@@ -61,7 +62,7 @@ export class CreditCardReposity extends Repository<CreditCard> {
       creditCard.status = CreditCardStatus.CLOSED;
       await creditCard.save();
     }else{
-      throw new NotFoundException('Credit card not found.')
+      throw new NotFoundException('Credit card not found.');
     }
   }
   

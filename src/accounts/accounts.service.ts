@@ -18,4 +18,8 @@ export class AccountsService {
   async getAccounts(user: User): Promise<Account[]>{
     return this.accountRepository.getAccounts(user);
   }
+  
+  async closeAccount(id: number, user: User): Promise<void>{
+    return this.accountRepository.closeAccount(id, user);
+  }
 }
