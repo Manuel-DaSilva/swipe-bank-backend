@@ -22,4 +22,8 @@ export class BanksService {
   async getBankByCreditCardCode(creditCardCode: string): Promise<Bank> {
     return this.bankRepository.findOne({ code: creditCardCode });
   }
+
+  async getBankByApiKey(apiKey: string): Promise<Bank> {
+    return this.bankRepository.findOne({ swipeApiKey: apiKey });
+  }
 }

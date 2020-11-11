@@ -18,14 +18,12 @@ export class AccountsService {
   async getAccounts(user: User): Promise<Account[]> {
     return this.accountRepository.getAccounts(user);
   }
-<<<<<<< HEAD
 
   async getAccountById(accountId: number): Promise<Account> {
     return this.accountRepository.findOne(accountId);
-=======
-  
-  async closeAccount(id: number, user: User): Promise<void>{
+  }
+
+  async closeAccount(id: number, user: User): Promise<void> {
     return this.accountRepository.closeAccount(id, user);
->>>>>>> e7841624b3836d0d1c148aca9dab525b2ffe954e
   }
 }

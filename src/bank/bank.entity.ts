@@ -15,5 +15,8 @@ export class Bank extends BaseEntity {
   code: string;
 
   @Column()
-  apiKey: string;
+  serviceApiKey: string;
+
+  @Column()
+  swipeApiKey: string;
 }

@@ -14,6 +14,7 @@ import { Transaction } from '../../transactions/transaction.entity';
 import { TransactionType } from 'src/transactions/transaction-type.enum';
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { v4 as uuidv4 } from 'uuid';
+import { UtilsService } from './utils.service';
 
 @Injectable()
 export class CreditCardPurchaseService {
@@ -21,6 +22,7 @@ export class CreditCardPurchaseService {
     private connection: Connection,
     private creditCardsService: CreditCardsService,
     private accountsService: AccountsService,
+    private utilsService: UtilsService,
   ) {}
 
   async handlePayment(
@@ -37,7 +39,9 @@ export class CreditCardPurchaseService {
     }
 
     // check is balance is enough to make the payment
-    if (!this.isPaymentValid(creditCard, creditCardPaymentDto.amount)) {
+    if (
+      !this.utilsService.isPaymentValid(creditCard, creditCardPaymentDto.amount)
+    ) {
       throw new BadRequestException('invalid transaction');
     }
 
@@ -60,7 +64,7 @@ export class CreditCardPurchaseService {
       });
 
       // creating credit transaction
-      const transactionA = this.generateTransaction(
+      const transactionA = this.utilsService.generateTransaction(
         null,
         shop.accountId,
         TransactionType.CREDIT_CARD_PAYMENT,
@@ -72,11 +76,11 @@ export class CreditCardPurchaseService {
 
       // updating creditCard
       await queryRunner.manager.update(CreditCard, creditCard.id, {
-        balance: creditCard.balance + creditCardPaymentDto.amount,
+        balance: creditCard.balance - creditCardPaymentDto.amount,
       });
 
       // creating debit transaction
-      const transactionB = this.generateTransaction(
+      const transactionB = this.utilsService.generateTransaction(
         creditCard.id,
         null,
         TransactionType.CREDIT_CARD_PAYMENT,
@@ -87,7 +91,7 @@ export class CreditCardPurchaseService {
       await queryRunner.manager.save(Transaction, transactionB);
 
       await queryRunner.commitTransaction();
-
+      // TODO change payment response
       return 'Payment successfull';
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -95,36 +99,5 @@ export class CreditCardPurchaseService {
     } finally {
       await queryRunner.release();
     }
-  }
-
-  private generateTransaction(
-    creditCardId: number,
-    accountId: number,
-    type: TransactionType,
-    nature: TransactionNature,
-    ref: string,
-    paymentDto: CreditCardPaymentDto,
-  ): Transaction {
-    if (creditCardId === null && accountId === null) {
-      throw new InternalServerErrorException();
-    }
-
-    const transaction = new Transaction();
-    transaction.accountId = accountId ?? null;
-    transaction.creditCardId = creditCardId ?? null;
-    transaction.amount = paymentDto.amount;
-    transaction.type = type;
-    transaction.nature = nature;
-    transaction.ref = ref;
-    transaction.mesage = paymentDto.description;
-    return transaction;
-  }
-
-  private isPaymentValid(
-    creditCard: CreditCard,
-    paymentAmount: number,
-  ): boolean {
-    const availableCredit = creditCard.limit - creditCard.balance;
-    return availableCredit - paymentAmount >= 0;
   }
 }

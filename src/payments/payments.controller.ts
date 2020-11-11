@@ -7,7 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
-import { PaymentsService } from './services/payments.service';
+import { PaymentsService } from './payments.service';
 
 @Controller('payments')
 export class PaymentsController {
@@ -21,5 +21,16 @@ export class PaymentsController {
       throw new BadRequestException('apikey header is required');
     }
     return this.paymentsService.creditCardPayment(creditCardPaymentDto, apikey);
+  }
+
+  @Post('bank')
+  redirectedPayment(
+    @Headers('apikey') apikey: string,
+    @Body(ValidationPipe) creditCardPaymentDto: CreditCardPaymentDto,
+  ): Promise<any> {
+    if (!apikey) {
+      throw new BadRequestException('apikey header is required');
+    }
+    return this.paymentsService.redirectedPayment(creditCardPaymentDto, apikey);
   }
 }

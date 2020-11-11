@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { timingSafeEqual } from 'crypto';
 import { User } from 'src/auth/user.entity';
 import { CreditCardPaymentDto } from 'src/payments/dto/credit-card-payment.dto';
 import { CreditCardStatus } from './credit-card-status.enum';
@@ -35,7 +34,7 @@ export class CreditCardsService {
     // });
   }
 
-  closeCard(id: number, user: User): Promise<void>{
+  closeCard(id: number, user: User): Promise<void> {
     return this.creditCardReposity.closeCreditCard(id, user);
   }
 }

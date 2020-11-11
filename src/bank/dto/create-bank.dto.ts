@@ -18,4 +18,7 @@ export class CreateBankDto {
   @MinLength(4)
   @MaxLength(4)
   code: string;
+
+  @IsString()
+  serviceApiKey: string;
 }

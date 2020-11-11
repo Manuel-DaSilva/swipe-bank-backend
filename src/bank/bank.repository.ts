@@ -12,7 +12,8 @@ export class BankRepository extends Repository<Bank> {
     newBank.apiEndPoint = createBankDto.apiEndPoint;
     newBank.code = createBankDto.code;
     newBank.name = createBankDto.name;
-    newBank.apiKey = uuidv4();
+    newBank.serviceApiKey = createBankDto.serviceApiKey;
+    newBank.swipeApiKey = uuidv4();
 
     try {
       await newBank.save();
