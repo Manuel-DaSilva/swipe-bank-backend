@@ -34,4 +34,8 @@ export class CreditCardsService {
     //   userId: user.id
     // });
   }
+
+  closeCard(id: number, user: User): Promise<void>{
+    return this.creditCardReposity.closeCreditCard(id, user);
+  }
 }

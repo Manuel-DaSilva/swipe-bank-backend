@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Post, UseGuards, Param } from '@nestjs/common';
 import { CreditCardsService } from './credit-cards.service';
 import { CreditCard } from './credit-card.entity';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
@@ -18,5 +18,10 @@ export class CreditCardsController {
   @Get()
   getAllCreditCards(@GetUser() user: User): Promise<CreditCard[]>{
     return this.creditCardsService.getAllCards(user);
+  }
+
+  @Delete(':id')
+  closeCreditCard(@Param('id') id: number, @GetUser() user: User): Promise<void>{
+    return this.creditCardsService.closeCard(id, user);
   }
 }
