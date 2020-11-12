@@ -21,6 +21,6 @@ export class TransactionsController {
     @Body(ValidationPipe) transactionDto: TransactionDto,
     @GetUser() user: User,
   ) {
-    this.transactionsService.inBankTransaction(user, transactionDto);
+    return this.transactionsService.inBankTransaction(user, transactionDto);
   }
 }
