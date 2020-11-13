@@ -8,7 +8,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: 'f3ad1e475a1e5977efac1e7a5a9fd986531e5ca034116dd83a24efea0cd16584',
   database: 'da1nv2of96pf5d',
   ssl: { rejectUnauthorized: false },
-
   // host: '0.0.0.0',
   // username: 'postgres',
   // password: 'admin',
