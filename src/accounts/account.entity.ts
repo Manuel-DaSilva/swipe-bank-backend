@@ -20,7 +20,7 @@ export class Account extends BaseEntity {
   @IsUUID()
   number: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'float' })
   balance: number;
 
   @Column()
