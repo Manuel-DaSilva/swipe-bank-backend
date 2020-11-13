@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
 import { ShopsService } from '../shops/shops.service';
 import { CREDIT_CARD_CODE } from 'src/config/bank.config';
@@ -62,7 +58,7 @@ export class PaymentsService {
     const bank = await this.banksService.getBankByApiKey(apikey);
 
     if (!bank) {
-      throw new BadRequestException(
+      throw new UnauthorizedException(
         `We couldn't find a bank with this apikey ${apikey}`,
       );
     }
