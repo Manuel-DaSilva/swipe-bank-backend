@@ -3,7 +3,10 @@ import { Account } from './account.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { AccountStatus } from './account-status.enum';
 import { User } from 'src/auth/user.entity';
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { userInfo } from 'os';
 
 @EntityRepository(Account)
@@ -25,28 +28,28 @@ export class AccountRepository extends Repository<Account> {
     }
   }
 
-  async getAccounts(user: User): Promise<Account[]>{
+  async getAccounts(user: User): Promise<Account[]> {
     const accounts = await Account.find({
       where: {
         userId: user.id,
-        status: AccountStatus.ACTIVE
-      }
+        status: AccountStatus.ACTIVE,
+      },
     });
     return accounts;
   }
 
-  async closeAccount(id: number, user: User): Promise<void>{
-    let account = await Account.findOne({
+  async closeAccount(id: number, user: User): Promise<void> {
+    const account = await Account.findOne({
       where: {
         id,
-        userId: user.id
-      }
+        userId: user.id,
+      },
     });
     console.log(account);
-    if(account){
+    if (account) {
       account.status = AccountStatus.CLOSED;
       await account.save();
-    }else{
+    } else {
       throw new NotFoundException('Account not found.');
     }
   }
