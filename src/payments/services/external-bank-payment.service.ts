@@ -1,112 +1,40 @@
 import {
   BadRequestException,
-  HttpService,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { BanksService } from 'src/bank/banks.service';
-import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';
+
+//services
 import { CreditCardsService } from 'src/credit-cards/credit-cards.service';
 import { UtilsService } from './utils.service';
-import { Connection } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { CreditCard } from 'src/credit-cards/credit-card.entity';
+
+// models
+import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';
+import { PaymentResponse } from '../response/payment-response.class';
 import { Transaction } from 'src/transactions/transaction.entity';
-import { TransactionType } from 'src/transactions/transaction-type.enum';
+import { CreditCard } from 'src/credit-cards/credit-card.entity';
+
+// typeorm
+import { Connection } from 'typeorm';
+
+// utils
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
-import { Shop } from '../../shops/shop.entity';
-import { AccountsService } from 'src/accounts/accounts.service';
-import { Account } from 'src/accounts/account.entity';
+import { TransactionType } from 'src/transactions/transaction-type.enum';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ExternalBankPaymentService {
   constructor(
-    private banksService: BanksService,
     private creditCardsService: CreditCardsService,
-    private httpService: HttpService,
     private utilsService: UtilsService,
     private connection: Connection,
-    private accountsService: AccountsService,
   ) {}
 
-  async redirectPayment(
+  async handlePayment(
     creditCardPaymentDto: CreditCardPaymentDto,
-    shop: Shop,
-  ): Promise<any> {
-    const bankCode = creditCardPaymentDto.creditCardNumber.slice(0, 4);
-    const bank = await this.banksService.getBankByCreditCardCode(bankCode);
-
-    if (!bank) {
-      throw new BadRequestException(
-        `We couldn't find a bank for this credit card`,
-      );
-    }
-
-    const apiEndPoint = bank.apiEndPoint;
-
-    // getting the account for the shop
-    const shopAccount = await this.accountsService.getAccountById(
-      shop.accountId,
-    );
-
-    try {
-      const response = await this.httpService
-        .post(apiEndPoint, creditCardPaymentDto, {
-          headers: {
-            apikey: bank.serviceApiKey,
-          },
-        })
-        .toPromise();
-
-      // add money yo store account
-      // TODO check response status
-      if (response.status !== 201) {
-        return new BadRequestException(response.data);
-      }
-
-      const queryRunner = this.connection.createQueryRunner();
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
-
-      try {
-        // unique transaction reference
-        const transactionRef = uuidv4();
-
-        // updating account
-        await queryRunner.manager.update(Account, shopAccount.id, {
-          balance: shopAccount.balance + creditCardPaymentDto.amount,
-        });
-
-        // creating credit transaction
-        const transaction = this.utilsService.generateTransaction(
-          null,
-          shop.accountId,
-          TransactionType.CREDIT_CARD_PAYMENT,
-          TransactionNature.CREDIT,
-          transactionRef,
-          creditCardPaymentDto.description,
-          creditCardPaymentDto.amount,
-        );
-        await queryRunner.manager.save(Transaction, transaction);
-        await queryRunner.commitTransaction();
-        // TODO change payment response
-        return 'Payment successfull';
-      } catch (error) {
-        await queryRunner.rollbackTransaction();
-        throw new InternalServerErrorException();
-      } finally {
-        await queryRunner.release();
-      }
-
-      return response.data;
-    } catch (e) {
-      return new InternalServerErrorException();
-    }
-  }
-
-  async handlePayment(creditCardPaymentDto: CreditCardPaymentDto) {
+  ): Promise<PaymentResponse> {
     // getting payment creditcard
-    const creditCard = await this.creditCardsService.getCreditCardForPayment(
+    const creditCard = await this.creditCardsService.getCreditCardFromPayment(
       creditCardPaymentDto,
     );
 
@@ -147,8 +75,14 @@ export class ExternalBankPaymentService {
       await queryRunner.manager.save(Transaction, transaction);
 
       await queryRunner.commitTransaction();
-      // TODO change payment response
-      return 'Payment successfull';
+      // building response
+      const succesfullPayment: PaymentResponse = {
+        message: 'Payment successfull',
+        amount: creditCardPaymentDto.amount,
+        ref: transactionRef,
+        description: creditCardPaymentDto.description,
+      };
+      return succesfullPayment;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();

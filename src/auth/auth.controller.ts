@@ -1,4 +1,5 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -9,6 +10,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiExcludeEndpoint()
   @Post('/signup')
   personSignUp(
     @Body(ValidationPipe) authSignUpDto: AuthSignUpDto,
@@ -16,6 +18,7 @@ export class AuthController {
     return this.authService.signUp(authSignUpDto);
   }
 
+  @ApiExcludeEndpoint()
   @Post('/signin')
   signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,

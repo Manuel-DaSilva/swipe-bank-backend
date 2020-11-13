@@ -11,12 +11,15 @@ import { User } from 'src/auth/user.entity';
 import { Shop } from './shop.entity';
 import { ShopsService } from './shops.service';
 import { CreateShopDto } from './dto/create-shop.dto';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('shops')
 @Controller('shops')
 @UseGuards(AuthGuard())
 export class ShopsController {
   constructor(private shopsService: ShopsService) {}
 
+  @ApiExcludeEndpoint()
   @Post()
   createShop(
     @Body(ValidationPipe) createShopDto: CreateShopDto,
