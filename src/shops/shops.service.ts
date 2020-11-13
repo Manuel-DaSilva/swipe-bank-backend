@@ -4,7 +4,6 @@ import { User } from 'src/auth/user.entity';
 import { ShopRepository } from './shop.repository';
 import { Shop } from './shop.entity';
 import { CreateShopDto } from './dto/create-shop.dto';
-import { AccountRepository } from '../accounts/account.repository';
 import { AccountsService } from 'src/accounts/accounts.service';
 
 @Injectable()

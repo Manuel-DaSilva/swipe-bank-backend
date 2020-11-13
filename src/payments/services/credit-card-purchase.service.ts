@@ -15,6 +15,7 @@ import { TransactionType } from 'src/transactions/transaction-type.enum';
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { UtilsService } from './utils.service';
+import { PaymentResponse } from '../response/payment-response.class';
 
 @Injectable()
 export class CreditCardPurchaseService {
@@ -28,21 +29,23 @@ export class CreditCardPurchaseService {
   async handlePayment(
     creditCardPaymentDto: CreditCardPaymentDto,
     shop: Shop,
-  ): Promise<string> {
+  ): Promise<PaymentResponse> {
     // getting payment creditcard
     const creditCard = await this.creditCardsService.getCreditCardForPayment(
       creditCardPaymentDto,
     );
 
     if (!creditCard) {
-      throw new BadRequestException('The credit card info is wrong');
+      throw new BadRequestException(
+        'Invalid payment: Credit card data does not match our records.',
+      );
     }
 
     // check is balance is enough to make the payment
     if (
       !this.utilsService.isPaymentValid(creditCard, creditCardPaymentDto.amount)
     ) {
-      throw new BadRequestException('invalid transaction');
+      throw new BadRequestException('Invalid payment: Insufficient funds');
     }
 
     // getting the account for the shop
@@ -93,8 +96,13 @@ export class CreditCardPurchaseService {
       await queryRunner.manager.save(Transaction, transactionB);
 
       await queryRunner.commitTransaction();
-      // TODO change payment response
-      return 'Payment successfull';
+      const succesfullPayment: PaymentResponse = {
+        message: 'Payment successfull',
+        amount: creditCardPaymentDto.amount,
+        ref: transactionRef,
+        description: creditCardPaymentDto.description,
+      };
+      return succesfullPayment;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();

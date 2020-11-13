@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
 import { ShopsService } from '../shops/shops.service';
 import { CREDIT_CARD_CODE } from 'src/config/bank.config';
 import { CreditCardPurchaseService } from './services/credit-card-purchase.service';
 import { ExternalBankPaymentService } from './services/external-bank-payment.service';
 import { BanksService } from '../bank/banks.service';
+import { PaymentResponse } from './response/payment-response.class';
 
 @Injectable()
 export class PaymentsService {
@@ -18,13 +23,11 @@ export class PaymentsService {
   async creditCardPayment(
     creditCardPaymentDto: CreditCardPaymentDto,
     apikey: string,
-  ) {
+  ): Promise<PaymentResponse> {
     const shop = await this.shopsService.getShopByApiKey(apikey);
 
     if (!shop) {
-      throw new BadRequestException(
-        `We couldn't find a shop with this apikey ${apikey}`,
-      );
+      throw new UnauthorizedException(`Invalid e-commerce apikey '${apikey}'.`);
     }
 
     if (this.isForOtherBank(creditCardPaymentDto.creditCardNumber)) {
