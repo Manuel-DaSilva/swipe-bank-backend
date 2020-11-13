@@ -74,7 +74,7 @@ export class ExternalBankRedirectPaymentService {
         .toPromise();
 
       if (response.status !== 200) {
-        throw new BadRequestException(
+        throw new BadGatewayException(
           response.data.message ||
             'Error while getting response from external bank',
         );
