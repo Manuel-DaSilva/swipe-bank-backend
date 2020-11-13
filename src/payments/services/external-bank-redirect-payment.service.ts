@@ -60,7 +60,7 @@ export class ExternalBankRedirectPaymentService {
     const apiEndPoint = bank.apiEndPoint;
     const bankCreditCardPaymentDto: CreditCardPaymentDto = {
       ...creditCardPaymentDto,
-      ecommerceName: shop.name,
+      commerce: shop.name,
     };
 
     try {

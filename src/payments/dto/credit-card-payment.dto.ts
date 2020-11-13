@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -17,6 +18,10 @@ export class CreditCardPaymentDto {
   @IsString()
   @MaxLength(5)
   @MinLength(5)
+  @Matches(/[0-9][0-9]\/[0-9][0-9]/, {
+    message:
+      'Password requires: 1 upper case letter, 1 lower case letter, 1 number or special character.',
+  })
   @ApiProperty({
     description: `'mm/yy' format`,
   })
@@ -44,5 +49,5 @@ export class CreditCardPaymentDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional()
-  ecommerceName: string;
+  commerce: string;
 }

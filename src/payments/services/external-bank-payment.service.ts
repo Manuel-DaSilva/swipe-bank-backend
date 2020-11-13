@@ -10,6 +10,7 @@ import { UtilsService } from './utils.service';
 
 // models
 import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';
+import { PaymentResponse } from '../response/payment-response.class';
 import { Transaction } from 'src/transactions/transaction.entity';
 import { CreditCard } from 'src/credit-cards/credit-card.entity';
 
@@ -29,7 +30,9 @@ export class ExternalBankPaymentService {
     private connection: Connection,
   ) {}
 
-  async handlePayment(creditCardPaymentDto: CreditCardPaymentDto) {
+  async handlePayment(
+    creditCardPaymentDto: CreditCardPaymentDto,
+  ): Promise<PaymentResponse> {
     // getting payment creditcard
     const creditCard = await this.creditCardsService.getCreditCardFromPayment(
       creditCardPaymentDto,
@@ -72,8 +75,14 @@ export class ExternalBankPaymentService {
       await queryRunner.manager.save(Transaction, transaction);
 
       await queryRunner.commitTransaction();
-      // TODO change payment response
-      return 'Payment successfull';
+      // building response
+      const succesfullPayment: PaymentResponse = {
+        message: 'Payment successfull',
+        amount: creditCardPaymentDto.amount,
+        ref: transactionRef,
+        description: creditCardPaymentDto.description,
+      };
+      return succesfullPayment;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();
