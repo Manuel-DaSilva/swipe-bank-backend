@@ -1,4 +1,5 @@
 import {
+  IsAlphanumeric,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -17,6 +18,7 @@ export class AuthSignUpDto {
   @IsString()
   @MinLength(6)
   @MaxLength(30)
+  @IsAlphanumeric()
   username: string;
 
   @IsIn([UserType.JURIDICAL, UserType.NATURAL])
