@@ -25,8 +25,9 @@ export class UserRepository extends Repository<User> {
     try {
       await user.save();
     } catch (e) {
+      console.log(e);
       if (e.code === '23505') {
-        throw new ConflictException(e, 'Duplicated values');
+        throw new ConflictException('An user with those values already exists');
       } else {
         throw new InternalServerErrorException();
       }
