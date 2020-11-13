@@ -42,7 +42,6 @@ export class CreditCardPaymentDto {
   amount: number;
 
   @IsString()
-  @IsAlpha()
   @ApiProperty()
   description: string;
 
