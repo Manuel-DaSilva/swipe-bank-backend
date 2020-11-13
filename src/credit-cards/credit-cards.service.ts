@@ -17,7 +17,7 @@ export class CreditCardsService {
     return this.creditCardReposity.createCreditCard(user);
   }
 
-  getCreditCardForPayment(creditCardPaymentDto: CreditCardPaymentDto) {
+  getCreditCardFromPayment(creditCardPaymentDto: CreditCardPaymentDto) {
     return this.creditCardReposity.findOne({
       number: creditCardPaymentDto.creditCardNumber.toUpperCase(),
       // expirationDate: creditCardPaymentDto

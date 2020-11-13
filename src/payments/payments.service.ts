@@ -10,16 +10,23 @@ import { CreditCardPurchaseService } from './services/credit-card-purchase.servi
 import { ExternalBankPaymentService } from './services/external-bank-payment.service';
 import { BanksService } from '../bank/banks.service';
 import { PaymentResponse } from './response/payment-response.class';
+import { ExternalBankRedirectPaymentService } from './services/external-bank-redirect-payment.service';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     private creditCardPurchaseService: CreditCardPurchaseService,
     private externalBankPaymentService: ExternalBankPaymentService,
+    private externalBankRedirectPaymentService: ExternalBankRedirectPaymentService,
     private banksService: BanksService,
     private shopsService: ShopsService,
   ) {}
 
+  /*
+   * @desc Handles the request directly sent from the e-commerce
+   * @param "creditCardPaymentDto" credit card data
+   * @param "apikey" of the e-commerce
+   */
   async creditCardPayment(
     creditCardPaymentDto: CreditCardPaymentDto,
     apikey: string,
@@ -31,7 +38,7 @@ export class PaymentsService {
     }
 
     if (this.isForOtherBank(creditCardPaymentDto.creditCardNumber)) {
-      return this.externalBankPaymentService.redirectPayment(
+      return this.externalBankRedirectPaymentService.redirectPayment(
         creditCardPaymentDto,
         shop,
       );
@@ -43,6 +50,11 @@ export class PaymentsService {
     }
   }
 
+  /*
+   * @desc Handle the incoming payment from another bank
+   * @param "creditCardPaymentDto" credit card data
+   * @param "apikey" of the bank
+   */
   async redirectedPayment(
     creditCardPaymentDto: CreditCardPaymentDto,
     apikey: string,
@@ -58,6 +70,7 @@ export class PaymentsService {
     return this.externalBankPaymentService.handlePayment(creditCardPaymentDto);
   }
 
+  // checks if a credit card belongs to this bank
   private isForOtherBank(cardNumber: string): boolean {
     const bankCode = cardNumber.slice(0, 4);
     return bankCode !== CREDIT_CARD_CODE;

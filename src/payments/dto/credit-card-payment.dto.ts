@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsAlpha,
   IsNumberString,
+  IsOptional,
   IsPositive,
   IsString,
   MaxLength,
@@ -39,4 +40,9 @@ export class CreditCardPaymentDto {
   @IsAlpha()
   @ApiProperty()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  ecommerceName: string;
 }

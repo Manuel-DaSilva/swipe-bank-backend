@@ -23,6 +23,11 @@ import { PaymentResponse } from './response/payment-response.class';
 export class PaymentsController {
   constructor(private paymentsService: PaymentsService) {}
 
+  /*
+   * @desc Handles the request directly sent from the e-commerce
+   * @param "creditCardPaymentDto" credit card data
+   * @param "apikey" apikey of the e-commerce
+   */
   @ApiOperation({ summary: 'Procesar compra desde comercio' })
   @ApiOkResponse({
     description: 'Pago realizado',
@@ -47,6 +52,12 @@ export class PaymentsController {
     return this.paymentsService.creditCardPayment(creditCardPaymentDto, apikey);
   }
 
+  /*
+   * @desc Handle the incoming request of payment from another bank
+   * @param "creditCardPaymentDto" credit card data
+   * @param apikey "apikey" of the bank
+   */
+  @ApiOperation({ summary: 'Procesar compra redireccion banco' })
   @Post('bank')
   redirectedPayment(
     @Headers('apikey') apikey: string,
