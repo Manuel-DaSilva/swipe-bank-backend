@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreditCardPaymentDto } from './dto/credit-card-payment.dto';
 import { ShopsService } from '../shops/shops.service';
 import { CREDIT_CARD_CODE } from 'src/config/bank.config';
@@ -10,6 +10,8 @@ import { ExternalBankRedirectPaymentService } from './services/external-bank-red
 
 @Injectable()
 export class PaymentsService {
+  private readonly logger = new Logger('PAYMENT');
+
   constructor(
     private creditCardPurchaseService: CreditCardPurchaseService,
     private externalBankPaymentService: ExternalBankPaymentService,
@@ -30,15 +32,18 @@ export class PaymentsService {
     const shop = await this.shopsService.getShopByApiKey(apikey);
 
     if (!shop) {
+      this.logger.error(`${apikey} was used but not e-commerce found`);
       throw new UnauthorizedException(`Invalid e-commerce apikey '${apikey}'.`);
     }
 
     if (this.isForOtherBank(creditCardPaymentDto.creditCardNumber)) {
+      this.logger.log('Redirecting to other bank');
       return this.externalBankRedirectPaymentService.redirectPayment(
         creditCardPaymentDto,
         shop,
       );
     } else {
+      this.logger.log('Handling payment on bank');
       return this.creditCardPurchaseService.handlePayment(
         creditCardPaymentDto,
         shop,
@@ -58,6 +63,7 @@ export class PaymentsService {
     const bank = await this.banksService.getBankByApiKey(apikey);
 
     if (!bank) {
+      this.logger.error(`${apikey} was used but not bank found`);
       throw new UnauthorizedException(
         `We couldn't find a bank with this apikey ${apikey}`,
       );

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 
 // services
@@ -27,6 +28,8 @@ import { Connection } from 'typeorm';
 
 @Injectable()
 export class CreditCardPurchaseService {
+  private readonly logger = new Logger('CREDI CARD PURCHASE');
+
   constructor(
     private connection: Connection,
     private creditCardsService: CreditCardsService,
@@ -47,9 +50,9 @@ export class CreditCardPurchaseService {
     const creditCard = await this.creditCardsService.getCreditCardFromPayment(
       creditCardPaymentDto,
     );
-    console.log('creditcard', creditCard);
 
     if (!creditCard) {
+      this.logger.error(`${creditCard.number} was used but not card found`);
       throw new BadRequestException(
         'Invalid payment: Credit card data does not match our records.',
       );
@@ -59,6 +62,9 @@ export class CreditCardPurchaseService {
     if (
       !this.utilsService.isPaymentValid(creditCard, creditCardPaymentDto.amount)
     ) {
+      this.logger.error(
+        `${creditCard.number} was used but has not founds for ${creditCardPaymentDto.amount}`,
+      );
       throw new BadRequestException('Invalid payment: Insufficient funds');
     }
 
@@ -66,26 +72,26 @@ export class CreditCardPurchaseService {
     const shopAccount = await this.accountsService.getAccountById(
       shop.accountId,
     );
-    console.log('account', shopAccount);
 
     // building query runner for transactions registration
     const queryRunner = this.connection.createQueryRunner();
+    this.logger.log('DB transaction started');
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
       // unique transaction reference
       const transactionRef = uuidv4();
-      console.log(
-        'account update expected',
-        shopAccount.balance,
-        '+',
-        creditCardPaymentDto.amount,
-      );
+
       // updating account
       await queryRunner.manager.update(Account, shop.accountId, {
         balance: shopAccount.balance + creditCardPaymentDto.amount,
       });
+      this.logger.log(
+        `Updating account with ${
+          shop.accountId
+        } balance: ${shopAccount.balance + creditCardPaymentDto.amount}`,
+      );
 
       // creating credit transaction
       const transactionA = this.utilsService.generateTransaction(
@@ -99,16 +105,15 @@ export class CreditCardPurchaseService {
       );
       await queryRunner.manager.save(Transaction, transactionA);
 
-      console.log(
-        'credit update expected',
-        creditCard.balance,
-        '+',
-        creditCardPaymentDto.amount,
-      );
       // updating creditCard
       await queryRunner.manager.update(CreditCard, creditCard.id, {
         balance: creditCard.balance - creditCardPaymentDto.amount,
       });
+      this.logger.log(
+        `Updating credit card with id${
+          shop.accountId
+        }, balance: ${creditCard.balance - creditCardPaymentDto.amount}`,
+      );
 
       // creating debit transaction
       const transactionB = this.utilsService.generateTransaction(
@@ -132,13 +137,17 @@ export class CreditCardPurchaseService {
         ref: transactionRef,
         description: creditCardPaymentDto.description,
       };
+      this.logger.log(`Transaction register with ref: ${transactionRef}`);
+      this.logger.log('Transaction successfull');
       return succesfullPayment;
     } catch (error) {
-      console.log(error);
+      this.logger.error('Error during transaction');
 
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();
     } finally {
+      this.logger.log('DB transaction ended');
+
       await queryRunner.release();
     }
   }
