@@ -52,7 +52,9 @@ export class CreditCardPurchaseService {
     );
 
     if (!creditCard) {
-      this.logger.error(`${creditCard.number} was used but not card found`);
+      this.logger.error(
+        `${creditCardPaymentDto.creditCardNumber} was used but not card found`,
+      );
       throw new BadRequestException(
         'Invalid payment: Credit card data does not match our records.',
       );
@@ -100,7 +102,7 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.CREDIT,
         transactionRef,
-        creditCardPaymentDto.description,
+        `${creditCardPaymentDto.description} e-commerce: ${shop.name}`,
         creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionA);
@@ -122,7 +124,7 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.DEBIT,
         transactionRef,
-        creditCardPaymentDto.description,
+        `${creditCardPaymentDto.description} e-commerce: ${shop.name}`,
         creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionB);

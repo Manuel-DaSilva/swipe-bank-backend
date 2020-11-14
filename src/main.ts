@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   // setting correct port heroku config
-  const logger = new Logger('bootstrap');
+  const logger = new Logger('Main');
   const port = process.env.PORT || 3000;
   const app = await NestFactory.create(AppModule);
 
