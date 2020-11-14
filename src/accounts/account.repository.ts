@@ -7,7 +7,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { userInfo } from 'os';
 
 @EntityRepository(Account)
 export class AccountRepository extends Repository<Account> {
@@ -15,7 +14,7 @@ export class AccountRepository extends Repository<Account> {
     const account = new Account();
 
     account.number = uuidv4();
-    account.balance = 0;
+    account.balance = 0.0;
     account.status = AccountStatus.ACTIVE;
     account.user = user;
 

@@ -1,8 +1,8 @@
-export class ColumnNumericTransformer {
-  to(data: number): number {
-    return data;
-  }
+export const ColumnNumericTransformer = {
+  to(data: number): string {
+    return data.toString();
+  },
   from(data: string): number {
     return parseFloat(data);
-  }
-}
+  },
+};

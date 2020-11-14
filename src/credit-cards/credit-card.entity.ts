@@ -27,10 +27,18 @@ export class CreditCard extends BaseEntity {
   @Column()
   securityCode: number;
 
-  @Column('decimal', { precision: 15, scale: 2 })
+  @Column('decimal', {
+    precision: 15,
+    scale: 2,
+    transformer: ColumnNumericTransformer,
+  })
   balance: number;
 
-  @Column()
+  @Column('decimal', {
+    precision: 15,
+    scale: 2,
+    transformer: ColumnNumericTransformer,
+  })
   limit: number;
 
   @Column()

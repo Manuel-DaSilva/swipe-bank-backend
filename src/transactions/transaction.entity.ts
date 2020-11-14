@@ -10,6 +10,7 @@ import { TransactionType } from './transaction-type.enum';
 import { TransactionNature } from './transaction-nature.enum';
 import { Account } from '../accounts/account.entity';
 import { CreditCard } from '../credit-cards/credit-card.entity';
+import { ColumnNumericTransformer } from 'src/utils/column-numeric-transformer.class';
 @Entity()
 export class Transaction extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -21,7 +22,11 @@ export class Transaction extends BaseEntity {
   @Column()
   type: TransactionType;
 
-  @Column('decimal', { precision: 15, scale: 2 })
+  @Column('decimal', {
+    precision: 15,
+    scale: 2,
+    transformer: ColumnNumericTransformer,
+  })
   amount: number;
 
   @CreateDateColumn()

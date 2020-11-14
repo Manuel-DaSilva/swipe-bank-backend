@@ -47,6 +47,8 @@ export class CreditCardPurchaseService {
     const creditCard = await this.creditCardsService.getCreditCardFromPayment(
       creditCardPaymentDto,
     );
+    console.log('creditcard', creditCard);
+
     if (!creditCard) {
       throw new BadRequestException(
         'Invalid payment: Credit card data does not match our records.',
@@ -64,6 +66,7 @@ export class CreditCardPurchaseService {
     const shopAccount = await this.accountsService.getAccountById(
       shop.accountId,
     );
+    console.log('account', shopAccount);
 
     // building query runner for transactions registration
     const queryRunner = this.connection.createQueryRunner();
@@ -73,15 +76,16 @@ export class CreditCardPurchaseService {
     try {
       // unique transaction reference
       const transactionRef = uuidv4();
-
+      console.log(
+        'account update expected',
+        shopAccount.balance,
+        '+',
+        creditCardPaymentDto.amount,
+      );
       // updating account
       await queryRunner.manager.update(Account, shop.accountId, {
         balance: shopAccount.balance + creditCardPaymentDto.amount,
       });
-      console.log(
-        'credit card update',
-        shopAccount.balance + creditCardPaymentDto.amount,
-      );
 
       // creating credit transaction
       const transactionA = this.utilsService.generateTransaction(
@@ -95,14 +99,16 @@ export class CreditCardPurchaseService {
       );
       await queryRunner.manager.save(Transaction, transactionA);
 
+      console.log(
+        'credit update expected',
+        creditCard.balance,
+        '+',
+        creditCardPaymentDto.amount,
+      );
       // updating creditCard
       await queryRunner.manager.update(CreditCard, creditCard.id, {
         balance: creditCard.balance - creditCardPaymentDto.amount,
       });
-      console.log(
-        'credit card update',
-        creditCard.balance - creditCardPaymentDto.amount,
-      );
 
       // creating debit transaction
       const transactionB = this.utilsService.generateTransaction(

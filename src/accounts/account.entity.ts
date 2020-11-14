@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { AccountStatus } from './account-status.enum';
 import { Transaction } from '../transactions/transaction.entity';
+import { parse } from 'path';
+import { ColumnNumericTransformer } from 'src/utils/column-numeric-transformer.class';
 
 @Entity()
 export class Account extends BaseEntity {
@@ -20,7 +22,11 @@ export class Account extends BaseEntity {
   @IsUUID()
   number: string;
 
-  @Column('decimal', { precision: 15, scale: 2 })
+  @Column('decimal', {
+    precision: 15,
+    scale: 2,
+    transformer: ColumnNumericTransformer,
+  })
   balance: number;
 
   @Column()
