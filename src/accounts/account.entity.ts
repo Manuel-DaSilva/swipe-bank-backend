@@ -20,7 +20,7 @@ export class Account extends BaseEntity {
   @IsUUID()
   number: string;
 
-  @Column('double')
+  @Column('decimal', { precision: 15, scale: 2 })
   balance: number;
 
   @Column()
