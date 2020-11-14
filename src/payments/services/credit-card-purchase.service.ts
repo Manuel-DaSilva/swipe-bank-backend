@@ -128,6 +128,8 @@ export class CreditCardPurchaseService {
       };
       return succesfullPayment;
     } catch (error) {
+      console.log(error);
+
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();
     } finally {

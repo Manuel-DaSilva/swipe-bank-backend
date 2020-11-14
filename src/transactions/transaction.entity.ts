@@ -21,7 +21,7 @@ export class Transaction extends BaseEntity {
   @Column()
   type: TransactionType;
 
-  @Column({ default: 0.0, type: 'decimal', precision: 10, scale: 2 })
+  @Column('double')
   amount: number;
 
   @CreateDateColumn()
