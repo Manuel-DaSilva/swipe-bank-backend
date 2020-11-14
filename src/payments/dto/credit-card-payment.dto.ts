@@ -49,4 +49,9 @@ export class CreditCardPaymentDto {
   @IsString()
   @ApiPropertyOptional()
   commerce: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  ref: string;
 }
