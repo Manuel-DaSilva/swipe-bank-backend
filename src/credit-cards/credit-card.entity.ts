@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { CreditCardStatus } from './credit-card-status.enum';
 import { Transaction } from '../transactions/transaction.entity';
+import { ColumnNumericTransformer } from 'src/utils/column-numeric-transformer.class';
 @Entity()
 export class CreditCard extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -26,7 +27,11 @@ export class CreditCard extends BaseEntity {
   @Column()
   securityCode: number;
 
-  @Column({ default: 0, type: 'real' })
+  @Column('numeric', {
+    precision: 7,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   balance: number;
 
   @Column()

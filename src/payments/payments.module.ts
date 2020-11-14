@@ -13,7 +13,7 @@ import { PaymentsController } from './payments.controller';
 import { ExternalBankRedirectPaymentService } from './services/external-bank-redirect-payment.service';
 import { ExternalBankPaymentService } from './services/external-bank-payment.service';
 import { CreditCardPurchaseService } from './services/credit-card-purchase.service';
-import { UtilsService } from './services/utils.service';
+import { UtilsService } from '../utils/utils.service';
 import { PaymentsService } from './payments.service';
 
 @Module({

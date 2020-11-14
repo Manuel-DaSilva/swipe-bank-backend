@@ -6,7 +6,7 @@ import {
 
 //services
 import { CreditCardsService } from 'src/credit-cards/credit-cards.service';
-import { UtilsService } from './utils.service';
+import { UtilsService } from '../../utils/utils.service';
 
 // models
 import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';

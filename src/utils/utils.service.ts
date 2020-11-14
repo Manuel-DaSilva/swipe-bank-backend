@@ -3,7 +3,6 @@ import { CreditCard } from 'src/credit-cards/credit-card.entity';
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { TransactionType } from 'src/transactions/transaction-type.enum';
 import { Transaction } from 'src/transactions/transaction.entity';
-import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';
 
 @Injectable()
 export class UtilsService {

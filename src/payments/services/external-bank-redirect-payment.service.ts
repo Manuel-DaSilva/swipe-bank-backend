@@ -9,7 +9,7 @@ import {
 //services
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BanksService } from 'src/bank/banks.service';
-import { UtilsService } from './utils.service';
+import { UtilsService } from '../../utils/utils.service';
 
 // models
 import { CreditCardPaymentDto } from '../dto/credit-card-payment.dto';

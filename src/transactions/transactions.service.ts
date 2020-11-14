@@ -10,7 +10,7 @@ import { TransactionDto } from './dto/transaction.dto';
 import { AccountsService } from '../accounts/accounts.service';
 import { Account } from '../accounts/account.entity';
 import { Connection } from 'typeorm';
-import { UtilsService } from 'src/payments/services/utils.service';
+import { UtilsService } from 'src/utils/utils.service';
 import { v4 as uuidv4 } from 'uuid';
 import { TransactionType } from './transaction-type.enum';
 import { TransactionNature } from './transaction-nature.enum';
