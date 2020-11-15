@@ -12,6 +12,7 @@ async function bootstrap() {
   // swagger config
   const options = new DocumentBuilder()
     .setTitle('Swipebank documentation')
+    .setDescription('URL BASE: https://dev-swipebank-api.herokuapp.com/')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
