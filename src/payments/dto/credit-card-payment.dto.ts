@@ -19,8 +19,7 @@ export class CreditCardPaymentDto {
   @MaxLength(5)
   @MinLength(5)
   @Matches(/[0-9][0-9]\/[0-9][0-9]/, {
-    message:
-      'Password requires: 1 upper case letter, 1 lower case letter, 1 number or special character.',
+    message: 'Date expected as mm/yy format',
   })
   @ApiProperty({
     description: `'mm/yy' format`,
