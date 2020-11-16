@@ -124,7 +124,7 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.DEBIT,
         transactionRef,
-        `${creditCardPaymentDto.description} e-commerce: ${shop.name}`,
+        `${creditCardPaymentDto.description} - ${shop.name}`,
         creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionB);
@@ -137,7 +137,7 @@ export class CreditCardPurchaseService {
         message: 'Payment successfull',
         amount: creditCardPaymentDto.amount,
         ref: transactionRef,
-        description: creditCardPaymentDto.description,
+        description: `${creditCardPaymentDto.description} - ${shop.name}`,
       };
       this.logger.log(`Transaction register with ref: ${transactionRef}`);
       this.logger.log('Transaction successfull');

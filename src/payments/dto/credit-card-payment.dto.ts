@@ -28,7 +28,7 @@ export class CreditCardPaymentDto {
 
   @IsNumberString()
   @MaxLength(4)
-  @MinLength(4)
+  @MinLength(3)
   @ApiProperty()
   creditCardSecurityCode: string;
 

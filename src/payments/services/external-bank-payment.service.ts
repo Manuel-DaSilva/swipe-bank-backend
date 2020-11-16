@@ -55,13 +55,16 @@ export class ExternalBankPaymentService {
 
     try {
       // unique transaction reference
-      const transactionRef = uuidv4();
+      const transactionRef = creditCardPaymentDto.ref || uuidv4();
 
       // updating creditCard
       await queryRunner.manager.update(CreditCard, creditCard.id, {
         balance: creditCard.balance - creditCardPaymentDto.amount,
       });
 
+      const fullDescription = `${
+        creditCardPaymentDto.description
+      } - ${creditCardPaymentDto.commerce || 'No commerce provided'}`;
       // creating debit transaction
       const transaction = this.utilsService.generateTransaction(
         creditCard.id,
@@ -69,7 +72,7 @@ export class ExternalBankPaymentService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.DEBIT,
         transactionRef,
-        creditCardPaymentDto.description,
+        fullDescription,
         creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transaction);
@@ -80,7 +83,7 @@ export class ExternalBankPaymentService {
         message: 'Payment successfull',
         amount: creditCardPaymentDto.amount,
         ref: transactionRef,
-        description: creditCardPaymentDto.description,
+        description: fullDescription,
       };
       return succesfullPayment;
     } catch (error) {

@@ -38,6 +38,10 @@ export class PaymentsController {
     status: 401,
     description: 'Pago rechazado apikey no presente o incorrecta',
   })
+  @ApiResponse({
+    status: 502,
+    description: 'La comunicación con el banco no fue exitosa',
+  })
   @Post('credit-card')
   @HttpCode(200)
   creditCardPayment(

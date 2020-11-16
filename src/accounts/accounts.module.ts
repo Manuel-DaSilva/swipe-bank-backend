@@ -4,9 +4,14 @@ import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { AccountRepository } from './account.repository';
 import { AuthModule } from '../auth/auth.module';
+import { UtilsService } from '../utils/utils.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountRepository]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([AccountRepository]),
+    AuthModule,
+    UtilsService,
+  ],
   controllers: [AccountsController],
   providers: [AccountsService],
   exports: [AccountsService],

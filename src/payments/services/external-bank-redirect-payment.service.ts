@@ -61,6 +61,7 @@ export class ExternalBankRedirectPaymentService {
     const bankCreditCardPaymentDto: CreditCardPaymentDto = {
       ...creditCardPaymentDto,
       commerce: shop.name,
+      ref: uuidv4(),
     };
 
     try {
@@ -92,12 +93,14 @@ export class ExternalBankRedirectPaymentService {
 
       try {
         // unique transaction reference
-        const transactionRef = uuidv4();
+        const transactionRef = response.data.ref;
 
         // updating account
         await queryRunner.manager.update(Account, shopAccount.id, {
           balance: shopAccount.balance + creditCardPaymentDto.amount,
         });
+
+        const fullDescription = `${response.data.description} - ${shop.name}`;
 
         // creating credit transaction
         const transaction = this.utilsService.generateTransaction(
@@ -106,7 +109,7 @@ export class ExternalBankRedirectPaymentService {
           TransactionType.CREDIT_CARD_PAYMENT,
           TransactionNature.CREDIT,
           transactionRef,
-          creditCardPaymentDto.description,
+          fullDescription,
           creditCardPaymentDto.amount,
         );
         await queryRunner.manager.save(Transaction, transaction);
@@ -117,7 +120,7 @@ export class ExternalBankRedirectPaymentService {
           message: 'Payment successfull',
           amount: creditCardPaymentDto.amount,
           ref: transactionRef,
-          description: creditCardPaymentDto.description,
+          description: fullDescription,
         };
         return succesfullPayment;
       } catch (error) {
@@ -126,8 +129,10 @@ export class ExternalBankRedirectPaymentService {
       } finally {
         await queryRunner.release();
       }
-    } catch (e) {
-      throw new BadGatewayException('We could get a response from the bank');
+    } catch (error) {
+      const errorMessage =
+        error.response.data.msg || 'We could get a response from the bank';
+      throw new BadGatewayException(errorMessage);
     }
   }
 }
