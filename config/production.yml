@@ -1,0 +1,9 @@
+db:
+  database: 'swipebank'
+  host: 'swipebank.ckwjmsekfgmt.us-east-2.rds.amazonaws.com'
+  username: 'admin'
+  password: 'devSwipebank1234567'
+  synchronize: true
+
+jwt:
+  secret: 'secret'
