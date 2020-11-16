@@ -24,6 +24,7 @@ import { Connection } from 'typeorm';
 // utils
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { TransactionType } from 'src/transactions/transaction-type.enum';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ExternalBankRedirectPaymentService {
@@ -60,6 +61,7 @@ export class ExternalBankRedirectPaymentService {
     const bankCreditCardPaymentDto: CreditCardPaymentDto = {
       ...creditCardPaymentDto,
       commerce: shop.name,
+      ref: uuidv4(),
     };
 
     try {
@@ -128,8 +130,10 @@ export class ExternalBankRedirectPaymentService {
       } finally {
         await queryRunner.release();
       }
-    } catch (e) {
-      throw new BadGatewayException('We could get a response from the bank');
+    } catch (error) {
+      const errorMessage =
+        error.response.data.msg || 'We could get a response from the bank';
+      throw new BadGatewayException(errorMessage);
     }
   }
 }

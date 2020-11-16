@@ -55,14 +55,16 @@ export class ExternalBankPaymentService {
 
     try {
       // unique transaction reference
-      const transactionRef = creditCardPaymentDto.ref;
+      const transactionRef = creditCardPaymentDto.ref || uuidv4();
 
       // updating creditCard
       await queryRunner.manager.update(CreditCard, creditCard.id, {
         balance: creditCard.balance - creditCardPaymentDto.amount,
       });
 
-      const fullDescription = `${creditCardPaymentDto.description} - ${creditCardPaymentDto.commerce}`;
+      const fullDescription = `${
+        creditCardPaymentDto.description
+      } - ${creditCardPaymentDto.commerce || 'No commerce provided'}`;
 
       // creating debit transaction
       const transaction = this.utilsService.generateTransaction(
