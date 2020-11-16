@@ -13,7 +13,7 @@ import { UtilsService } from '../utils/utils.service';
     UtilsService,
   ],
   controllers: [AccountsController],
-  providers: [AccountsService],
+  providers: [AccountsService, UtilsService],
   exports: [AccountsService],
 })
 export class AccountsModule {}

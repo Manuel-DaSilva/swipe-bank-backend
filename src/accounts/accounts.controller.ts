@@ -53,7 +53,10 @@ export class AccountsController {
 
   @ApiExcludeEndpoint()
   @Post('deposit')
-  deposit(): Promise<void> {
-    return null;
+  deposit(
+    @GetUser() user: User,
+    @Body(ValidationPipe) withDrawDto: WithdrawDto,
+  ): Promise<OperationResponse> {
+    return this.accountsService.deposit(user, withDrawDto);
   }
 }
