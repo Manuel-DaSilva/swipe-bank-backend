@@ -137,7 +137,7 @@ export class CreditCardPurchaseService {
         message: 'Payment successfull',
         amount: creditCardPaymentDto.amount,
         ref: transactionRef,
-        description: creditCardPaymentDto.description,
+        description: `${creditCardPaymentDto.description} - ${shop.name}`,
       };
       this.logger.log(`Transaction register with ref: ${transactionRef}`);
       this.logger.log('Transaction successfull');
