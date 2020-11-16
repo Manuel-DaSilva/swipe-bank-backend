@@ -24,7 +24,6 @@ import { Connection } from 'typeorm';
 // utils
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { TransactionType } from 'src/transactions/transaction-type.enum';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ExternalBankRedirectPaymentService {
@@ -72,6 +71,7 @@ export class ExternalBankRedirectPaymentService {
           },
         })
         .toPromise();
+      console.log(response.data);
 
       if (response.status !== 200) {
         throw new BadGatewayException(
@@ -92,12 +92,14 @@ export class ExternalBankRedirectPaymentService {
 
       try {
         // unique transaction reference
-        const transactionRef = uuidv4();
+        const transactionRef = response.data.ref;
 
         // updating account
         await queryRunner.manager.update(Account, shopAccount.id, {
           balance: shopAccount.balance + creditCardPaymentDto.amount,
         });
+
+        const fullDescription = `${response.data.description} - ${shop.name}`;
 
         // creating credit transaction
         const transaction = this.utilsService.generateTransaction(
@@ -106,7 +108,7 @@ export class ExternalBankRedirectPaymentService {
           TransactionType.CREDIT_CARD_PAYMENT,
           TransactionNature.CREDIT,
           transactionRef,
-          creditCardPaymentDto.description,
+          fullDescription,
           creditCardPaymentDto.amount,
         );
         await queryRunner.manager.save(Transaction, transaction);
@@ -117,7 +119,7 @@ export class ExternalBankRedirectPaymentService {
           message: 'Payment successfull',
           amount: creditCardPaymentDto.amount,
           ref: transactionRef,
-          description: creditCardPaymentDto.description,
+          description: fullDescription,
         };
         return succesfullPayment;
       } catch (error) {
