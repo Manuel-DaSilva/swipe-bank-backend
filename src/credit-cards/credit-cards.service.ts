@@ -49,6 +49,16 @@ export class CreditCardsService {
     // });
   }
 
+  getCardById(user: User, cardId: number): Promise<CreditCard> {
+    return this.creditCardReposity.findOne({
+      id: cardId,
+      userId: user.id,
+    });
+    // return this.creditCardReposity.find({
+    //   userId: user.id
+    // });
+  }
+
   closeCard(id: number, user: User): Promise<void> {
     return this.creditCardReposity.closeCreditCard(id, user);
   }

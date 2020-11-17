@@ -38,4 +38,10 @@ export class CreditCardsController {
   ): Promise<void> {
     return this.creditCardsService.closeCard(id, user);
   }
+
+  @ApiExcludeEndpoint()
+  @Post()
+  payment(@Param('id') id: number, @GetUser() user: User): Promise<void> {
+    return this.creditCardsService.closeCard(id, user);
+  }
 }

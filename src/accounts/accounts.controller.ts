@@ -31,7 +31,7 @@ export class AccountsController {
 
   @ApiExcludeEndpoint()
   @Get()
-  gerAccounts(@GetUser() user: User): Promise<Account[]> {
+  getAccounts(@GetUser() user: User): Promise<Account[]> {
     return this.accountsService.getAccounts(user);
   }
 
