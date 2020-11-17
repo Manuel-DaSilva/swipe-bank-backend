@@ -65,10 +65,6 @@ export class ExternalBankPaymentService {
       const fullDescription = `${
         creditCardPaymentDto.description
       } - ${creditCardPaymentDto.commerce || 'No commerce provided'}`;
-<<<<<<< HEAD
-
-=======
->>>>>>> 11949850a622bdfc241f90c90a664a64cb3cd8b8
       // creating debit transaction
       const transaction = this.utilsService.generateTransaction(
         creditCard.id,
