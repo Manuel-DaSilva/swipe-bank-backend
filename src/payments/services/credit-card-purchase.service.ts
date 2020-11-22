@@ -102,7 +102,7 @@ export class CreditCardPurchaseService {
         TransactionType.CREDIT_CARD_PAYMENT,
         TransactionNature.CREDIT,
         transactionRef,
-        `${creditCardPaymentDto.description} e-commerce: ${shop.name}`,
+        `${creditCardPaymentDto.description} - ${shop.name}`,
         creditCardPaymentDto.amount,
       );
       await queryRunner.manager.save(Transaction, transactionA);

@@ -1,0 +1,9 @@
+db:
+  database: 'swipebank-dev'
+  host: 'localhost'
+  username: 'root'
+  password: 'admin'
+  synchronize: true
+
+jwt:
+  secret: 'secret'

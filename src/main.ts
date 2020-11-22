@@ -1,12 +1,11 @@
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
+import * as config from 'config';
 
 async function bootstrap() {
+  const serverConfig = config.get('server');
   // setting correct port heroku config
-  const logger = new Logger('Main');
-  const port = process.env.PORT || 3000;
   const app = await NestFactory.create(AppModule);
 
   // swagger config
@@ -22,10 +21,7 @@ async function bootstrap() {
   app.enableCors();
 
   // starting app
-  logger.log(`accpeting requests from all origins`);
+  const port = process.env.PORT || serverConfig.port;
   await app.listen(port);
-  logger.log(
-    `Aplication listening on port ${port}, started ${new Date(Date.now())}`,
-  );
 }
 bootstrap();

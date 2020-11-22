@@ -73,6 +73,7 @@ export class ExternalBankRedirectPaymentService {
           },
         })
         .toPromise();
+      console.log(response.data);
 
       if (response.status !== 200) {
         throw new BadGatewayException(
