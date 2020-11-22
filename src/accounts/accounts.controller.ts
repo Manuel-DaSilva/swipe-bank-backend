@@ -61,6 +61,7 @@ export class AccountsController {
     return this.accountsService.deposit(user, withDrawDto);
   }
 
+  @ApiExcludeEndpoint()
   @Get(':id/movements')
   getMovements(
     @Param('id') number: string,

@@ -30,6 +30,9 @@ export class Shop extends BaseEntity {
   )
   user: User;
 
+  @Column()
+  userId: number;
+
   @OneToOne(() => Account)
   @JoinColumn()
   account: Account;

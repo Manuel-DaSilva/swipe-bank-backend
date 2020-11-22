@@ -24,4 +24,8 @@ export class ShopsService {
   async getShopByApiKey(apiKey: string): Promise<Shop> {
     return this.shopRepository.findOne({ apiKey });
   }
+
+  getShops(user: User) {
+    return this.shopRepository.find({ userId: user.id });
+  }
 }

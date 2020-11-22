@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
   ValidationPipe,
@@ -26,5 +27,10 @@ export class ShopsController {
     @GetUser() user: User,
   ): Promise<Shop> {
     return this.shopsService.createShop(user, createShopDto);
+  }
+  @ApiExcludeEndpoint()
+  @Get()
+  getShops(@GetUser() user: User): Promise<Shop[]> {
+    return this.shopsService.getShops(user);
   }
 }

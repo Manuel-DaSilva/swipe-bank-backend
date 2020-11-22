@@ -46,6 +46,7 @@ export class CreditCardsController {
     return this.creditCardsService.closeCard(id, user);
   }
 
+  @ApiExcludeEndpoint()
   @Get(':id/movements')
   getMovements(
     @Param('id') number: string,
