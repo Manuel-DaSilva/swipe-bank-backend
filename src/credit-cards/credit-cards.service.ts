@@ -88,7 +88,7 @@ export class CreditCardsService {
       .toString()
       .slice(-2);
 
-    const stringFromDto = `${date.getMonth()}/${year}`;
+    const stringFromDto = `${date.getMonth() + 1}/${year}`;
     console.log(stringFromDto);
     console.log(dateString);
 
