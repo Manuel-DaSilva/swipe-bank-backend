@@ -1,6 +1,9 @@
 import { IsNumber, IsPositive, IsString } from 'class-validator';
 
-export class WithdrawDto {
+export class OperationDto {
+  @IsString()
+  creditCardNumber: string;
+
   @IsString()
   accountNumber: string;
 

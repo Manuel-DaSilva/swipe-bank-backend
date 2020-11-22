@@ -5,6 +5,8 @@ import {
   Post,
   UseGuards,
   Param,
+  Body,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreditCardsService } from './credit-cards.service';
 import { CreditCard } from './credit-card.entity';
@@ -13,6 +15,7 @@ import { User } from 'src/auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { Transaction } from 'src/transactions/transaction.entity';
+import { OperationDto } from './dto/operation.dto';
 
 @Controller('credit-cards')
 @UseGuards(AuthGuard())
@@ -42,8 +45,11 @@ export class CreditCardsController {
 
   @ApiExcludeEndpoint()
   @Post()
-  payment(@Param('id') id: number, @GetUser() user: User): Promise<void> {
-    return this.creditCardsService.closeCard(id, user);
+  payment(
+    @GetUser() user: User,
+    @Body(ValidationPipe) operationDto: OperationDto,
+  ): Promise<string> {
+    return this.creditCardsService.payment(operationDto, user);
   }
 
   @ApiExcludeEndpoint()
@@ -51,7 +57,7 @@ export class CreditCardsController {
   getMovements(
     @Param('id') number: string,
     @GetUser() user: User,
-  ): Promise<Transaction[]> {
+  ): Promise<CreditCard> {
     return this.creditCardsService.getMovements(number, user);
   }
 }

@@ -15,7 +15,7 @@ import { Account } from './account.entity';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
-import { WithdrawDto } from './dto/withdraw.dto';
+import { OperationDto } from './dto/operation.dto';
 import { OperationResponse } from './response/operationResponse.class';
 import { Transaction } from 'src/transactions/transaction.entity';
 
@@ -47,18 +47,18 @@ export class AccountsController {
   @HttpCode(200)
   withdraw(
     @GetUser() user: User,
-    @Body(ValidationPipe) withDrawDto: WithdrawDto,
+    @Body(ValidationPipe) operationDto: OperationDto,
   ): Promise<OperationResponse> {
-    return this.accountsService.withdraw(user, withDrawDto);
+    return this.accountsService.withdraw(user, operationDto);
   }
 
   @ApiExcludeEndpoint()
   @Post('deposit')
   deposit(
     @GetUser() user: User,
-    @Body(ValidationPipe) withDrawDto: WithdrawDto,
+    @Body(ValidationPipe) OperationDto: OperationDto,
   ): Promise<OperationResponse> {
-    return this.accountsService.deposit(user, withDrawDto);
+    return this.accountsService.deposit(user, OperationDto);
   }
 
   @ApiExcludeEndpoint()
@@ -66,7 +66,7 @@ export class AccountsController {
   getMovements(
     @Param('id') number: string,
     @GetUser() user: User,
-  ): Promise<Transaction[]> {
+  ): Promise<Account> {
     return this.accountsService.getMovements(number, user);
   }
 }

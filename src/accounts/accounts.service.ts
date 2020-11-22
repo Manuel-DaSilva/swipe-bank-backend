@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { AccountRepository } from './account.repository';
 import { Account } from './account.entity';
-import { WithdrawDto } from './dto/withdraw.dto';
+import { OperationDto } from './dto/operation.dto';
 import { OperationResponse } from './response/operationResponse.class';
 import { UtilsService } from '../utils/utils.service';
 import { TransactionType } from 'src/transactions/transaction-type.enum';
@@ -16,7 +16,6 @@ import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Transaction } from '../transactions/transaction.entity';
-import { TransactionsService } from '../transactions/transactions.service';
 
 @Injectable()
 export class AccountsService {
@@ -48,11 +47,11 @@ export class AccountsService {
 
   async withdraw(
     user: User,
-    withdrawDto: WithdrawDto,
+    operationDto: OperationDto,
   ): Promise<OperationResponse> {
     const account = await this.accountRepository.findOne({
       userId: user.id,
-      number: withdrawDto.accountNumber,
+      number: operationDto.accountNumber,
       status: AccountStatus.ACTIVE,
     });
 
@@ -60,9 +59,9 @@ export class AccountsService {
       throw new BadRequestException('Invalid account');
     }
 
-    if (account.balance >= withdrawDto.amount) {
+    if (account.balance >= operationDto.amount) {
       // do withdraw
-      const result = account.balance - withdrawDto.amount;
+      const result = account.balance - operationDto.amount;
       account.balance = result;
       await account.save();
       const withdrawRef = uuidv4();
@@ -73,11 +72,11 @@ export class AccountsService {
         TransactionNature.DEBIT,
         withdrawRef,
         '',
-        withdrawDto.amount,
+        operationDto.amount,
       );
       await transaction.save();
       const successOperation: OperationResponse = {
-        amount: withdrawDto.amount,
+        amount: operationDto.amount,
       };
 
       return successOperation;
@@ -88,11 +87,11 @@ export class AccountsService {
 
   async deposit(
     user: User,
-    withdrawDto: WithdrawDto,
+    operationDto: OperationDto,
   ): Promise<OperationResponse> {
     const account = await this.accountRepository.findOne({
       userId: user.id,
-      number: withdrawDto.accountNumber,
+      number: operationDto.accountNumber,
       status: AccountStatus.ACTIVE,
     });
 
@@ -101,7 +100,7 @@ export class AccountsService {
     }
 
     try {
-      const result = account.balance + withdrawDto.amount;
+      const result = account.balance + operationDto.amount;
       account.balance = result;
       await account.save();
       const depositRef = uuidv4();
@@ -112,11 +111,11 @@ export class AccountsService {
         TransactionNature.CREDIT,
         depositRef,
         '',
-        withdrawDto.amount,
+        operationDto.amount,
       );
       await transaction.save();
       const successOperation: OperationResponse = {
-        amount: withdrawDto.amount,
+        amount: operationDto.amount,
       };
 
       return successOperation;
@@ -125,7 +124,7 @@ export class AccountsService {
     }
   }
 
-  async getMovements(number: string, user: User): Promise<Transaction[]> {
+  async getMovements(number: string, user: User): Promise<Account> {
     const account = await this.accountRepository.findOne({
       number,
       userId: user.id,
@@ -136,6 +135,6 @@ export class AccountsService {
       throw new BadRequestException();
     }
 
-    return account.transactions;
+    return account;
   }
 }
