@@ -44,7 +44,7 @@ export class CreditCardsController {
   }
 
   @ApiExcludeEndpoint()
-  @Post()
+  @Post('balance-payment')
   payment(
     @GetUser() user: User,
     @Body(ValidationPipe) operationDto: OperationDto,

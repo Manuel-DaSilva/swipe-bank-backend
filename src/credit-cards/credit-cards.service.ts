@@ -153,7 +153,7 @@ export class CreditCardsService {
         balance: account.balance - operationDto.amount,
       });
 
-      // creating credit transaction
+      // creating DEBIT transaction
       const transactionA = this.utilsService.generateTransaction(
         null,
         account.id,
@@ -170,12 +170,12 @@ export class CreditCardsService {
         balance: creditCard.balance + operationDto.amount,
       });
 
-      // creating debit transaction
+      // creating CREDIT transaction
       const transactionB = this.utilsService.generateTransaction(
         creditCard.id,
         null,
         TransactionType.CREDIT_CARD_PAYMENT,
-        TransactionNature.DEBIT,
+        TransactionNature.CREDIT,
         transactionRef,
         `CARD PAYMENT FROM ACCOUNT`,
         operationDto.amount,
