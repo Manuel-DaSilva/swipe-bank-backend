@@ -2,6 +2,8 @@ import {
   Injectable,
   BadRequestException,
   InternalServerErrorException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionRepository } from './transaction.repository';
@@ -102,5 +104,11 @@ export class TransactionsService {
 
   private isTransactionValid(fromAccount: Account, amount: number) {
     return fromAccount.balance >= amount;
+  }
+
+  getAccountMovements(accountId: number): Promise<Transaction[]> {
+    return this.transactionRepository.find({
+      accountId,
+    });
   }
 }

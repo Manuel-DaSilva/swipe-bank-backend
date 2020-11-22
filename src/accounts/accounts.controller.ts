@@ -17,6 +17,7 @@ import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { WithdrawDto } from './dto/withdraw.dto';
 import { OperationResponse } from './response/operationResponse.class';
+import { Transaction } from 'src/transactions/transaction.entity';
 
 @Controller('accounts')
 @UseGuards(AuthGuard())
@@ -58,5 +59,13 @@ export class AccountsController {
     @Body(ValidationPipe) withDrawDto: WithdrawDto,
   ): Promise<OperationResponse> {
     return this.accountsService.deposit(user, withDrawDto);
+  }
+
+  @Get(':id/movements')
+  getMovements(
+    @Param('id') number: string,
+    @GetUser() user: User,
+  ): Promise<Transaction[]> {
+    return this.accountsService.getMovements(number, user);
   }
 }

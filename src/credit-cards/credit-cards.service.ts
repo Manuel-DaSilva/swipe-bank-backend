@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { CreditCardPaymentDto } from 'src/payments/dto/credit-card-payment.dto';
+import { Transaction } from 'src/transactions/transaction.entity';
 import { CreditCardStatus } from './credit-card-status.enum';
 import { CreditCard } from './credit-card.entity';
 import { CreditCardReposity } from './credit-card.repository';
@@ -76,5 +77,19 @@ export class CreditCardsService {
     console.log(dateString);
 
     return dateString === stringFromDto;
+  }
+
+  async getMovements(number: string, user: User): Promise<Transaction[]> {
+    const creditCard = await this.creditCardReposity.findOne({
+      number,
+      userId: user.id,
+    });
+
+    // creditCard doesnt belongs to the user
+    if (!creditCard) {
+      throw new BadRequestException();
+    }
+
+    return creditCard.transactions;
   }
 }

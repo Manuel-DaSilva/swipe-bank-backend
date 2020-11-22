@@ -41,7 +41,7 @@ export class Transaction extends BaseEntity {
   @ManyToOne(
     () => Account,
     account => account.transactions,
-    { nullable: true },
+    { nullable: true, eager: false },
   )
   account: Account;
 

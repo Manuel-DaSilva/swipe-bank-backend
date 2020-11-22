@@ -16,5 +16,6 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   providers: [TransactionsService],
   controllers: [TransactionsController],
+  exports: [TransactionsService],
 })
 export class TransactionsModule {}

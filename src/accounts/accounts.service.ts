@@ -15,6 +15,8 @@ import { TransactionType } from 'src/transactions/transaction-type.enum';
 import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Transaction } from '../transactions/transaction.entity';
+import { TransactionsService } from '../transactions/transactions.service';
 
 @Injectable()
 export class AccountsService {
@@ -121,5 +123,19 @@ export class AccountsService {
     } catch (error) {
       throw new InternalServerErrorException();
     }
+  }
+
+  async getMovements(number: string, user: User): Promise<Transaction[]> {
+    const account = await this.accountRepository.findOne({
+      number,
+      userId: user.id,
+    });
+
+    // accounts doesnt belongs to the user
+    if (!account) {
+      throw new BadRequestException();
+    }
+
+    return account.transactions;
   }
 }
