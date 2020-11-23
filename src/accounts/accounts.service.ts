@@ -16,6 +16,7 @@ import { TransactionNature } from 'src/transactions/transaction-nature.enum';
 import { v4 as uuidv4 } from 'uuid';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Transaction } from '../transactions/transaction.entity';
+import { MAX_BANK_AMOUNT } from '../config/bank.config';
 
 @Injectable()
 export class AccountsService {
@@ -97,6 +98,10 @@ export class AccountsService {
 
     if (!account) {
       throw new BadRequestException('Invalid account');
+    }
+
+    if (account.balance + operationDto.amount > MAX_BANK_AMOUNT) {
+      throw new BadRequestException('Exceed bank limit');
     }
 
     try {
