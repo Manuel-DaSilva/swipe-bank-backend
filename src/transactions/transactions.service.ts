@@ -93,7 +93,7 @@ export class TransactionsService {
 
       await queryRunner.commitTransaction();
       // TODO change payment response
-      return 'Transaction successfull';
+      return { status: true , ref: transactionB.ref}; 
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();
