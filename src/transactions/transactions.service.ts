@@ -93,9 +93,10 @@ export class TransactionsService {
 
       await queryRunner.commitTransaction();
       // TODO change payment response
-      return { status: true , ref: transactionB.ref}; 
+      return  transactionB; 
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      console.log('Epale')
       throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
