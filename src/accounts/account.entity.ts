@@ -45,7 +45,7 @@ export class Account extends BaseEntity {
   @OneToMany(
     () => Transaction,
     transaction => transaction.account,
-    { eager: true },
+    { eager: false },
   )
   transactions: Transaction[];
 }

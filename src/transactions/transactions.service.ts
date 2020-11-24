@@ -118,4 +118,9 @@ export class TransactionsService {
       accountId,
     });
   }
+  getCreditCardMovements(creditCardId: number): Promise<Transaction[]> {
+    return this.transactionRepository.find({
+      creditCardId,
+    });
+  }
 }

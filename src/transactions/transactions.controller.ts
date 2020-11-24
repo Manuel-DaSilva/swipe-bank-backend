@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UseGuards,
   ValidationPipe,
@@ -24,5 +26,17 @@ export class TransactionsController {
     @GetUser() user: User,
   ) {
     return this.transactionsService.inBankTransaction(user, transactionDto);
+  }
+
+  @ApiExcludeEndpoint()
+  @Get('account/:id')
+  accountTransactions(@Param('id') id: number) {
+    return this.transactionsService.getAccountMovements(id);
+  }
+
+  @ApiExcludeEndpoint()
+  @Get('creditCard/:id')
+  creditCardTransactionsTransactions(@Param('id') id: number) {
+    return this.transactionsService.getAccountMovements(id);
   }
 }

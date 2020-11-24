@@ -185,7 +185,7 @@ export class CreditCardsService {
       // save transactions
       await queryRunner.commitTransaction();
 
-      return 'payment successfull';
+      return;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException();

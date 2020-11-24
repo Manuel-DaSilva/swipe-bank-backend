@@ -57,7 +57,7 @@ export class CreditCard extends BaseEntity {
   @OneToMany(
     () => Transaction,
     transaction => transaction.creditCard,
-    { eager: true },
+    { eager: false },
   )
   transactions: Transaction[];
 }
