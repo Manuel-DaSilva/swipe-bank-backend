@@ -33,7 +33,7 @@ export class Shop extends BaseEntity {
   @Column()
   userId: number;
 
-  @OneToOne(() => Account)
+  @OneToOne(() => Account, { eager: true })
   @JoinColumn()
   account: Account;
 

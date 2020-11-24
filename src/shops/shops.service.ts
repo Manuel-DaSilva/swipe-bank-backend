@@ -28,4 +28,11 @@ export class ShopsService {
   getShops(user: User) {
     return this.shopRepository.find({ userId: user.id });
   }
+
+  getShopById(id: number, user: User): Promise<Shop> {
+    return this.shopRepository.findOne({
+      id,
+      userId: user.id,
+    });
+  }
 }

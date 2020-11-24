@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UseGuards,
   ValidationPipe,
@@ -28,9 +29,16 @@ export class ShopsController {
   ): Promise<Shop> {
     return this.shopsService.createShop(user, createShopDto);
   }
+
   @ApiExcludeEndpoint()
   @Get()
   getShops(@GetUser() user: User): Promise<Shop[]> {
     return this.shopsService.getShops(user);
+  }
+
+  @ApiExcludeEndpoint()
+  @Get(':id')
+  getShop(@Param('id') id: number, @GetUser() user: User): Promise<Shop> {
+    return this.shopsService.getShopById(id, user);
   }
 }
