@@ -43,6 +43,12 @@ export class TransactionsService {
       );
     }
 
+    if (!toAccount) {
+      throw new BadRequestException(
+        'Invalid transaction, account doesnt exists',
+      );
+    }
+
     if (!this.isTransactionValid(fromAccount, transactionDto.amount)) {
       // TODO change badrequest to correct response
       throw new BadRequestException(
@@ -93,10 +99,10 @@ export class TransactionsService {
 
       await queryRunner.commitTransaction();
       // TODO change payment response
-      return  transactionB; 
+      return transactionB;
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      console.log('Epale')
+      console.log(error);
       throw new InternalServerErrorException();
     } finally {
       await queryRunner.release();
