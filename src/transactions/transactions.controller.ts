@@ -37,6 +37,6 @@ export class TransactionsController {
   @ApiExcludeEndpoint()
   @Get('creditCard/:id')
   creditCardTransactionsTransactions(@Param('id') id: number) {
-    return this.transactionsService.getAccountMovements(id);
+    return this.transactionsService.getCreditCardMovements(id);
   }
 }
